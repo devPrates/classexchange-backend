@@ -1,8 +1,14 @@
 package com.ClassExchange.usecases.manter_campus;
 
-import com.ClassExchange.exception.BusinessException;
+import com.ClassExchange.exception.NotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,36 +17,67 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/campus")
 @RequiredArgsConstructor
+@Tag(name = "Campus", description = "API para gerenciamento de campus")
 public class CampusController {
 
     private final CampusService service;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Criar um novo campus", description = "Cria um novo campus no sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Campus criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "409", description = "Campus já existe")
+    })
     public CampusResponse criar(@Valid @RequestBody CampusRequest request) {
-        if (request.nome().length() < 3) {
-            throw new BusinessException("O nome do campus deve ter pelo menos 3 caracteres");
-        }
         return service.criar(request);
     }
 
     @GetMapping
+    @Operation(summary = "Listar todos os campus", description = "Retorna uma lista com todos os campus cadastrados")
+    @ApiResponse(responseCode = "200", description = "Lista de campus retornada com sucesso")
     public List<CampusResponse> listarTodos() {
         return service.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public CampusResponse buscarPorId(@PathVariable UUID id) {
+    @Operation(summary = "Buscar campus por ID", description = "Retorna um campus específico pelo seu ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Campus encontrado"),
+            @ApiResponse(responseCode = "404", description = "Campus não encontrado")
+    })
+    public CampusResponse buscarPorId(
+            @Parameter(description = "ID do campus", required = true)
+            @PathVariable UUID id) {
         return service.buscarPorId(id)
-                .orElseThrow(() -> new com.ClassExchange.exception.NotFoundException("Campus não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
     }
 
     @PutMapping("/{id}")
-    public CampusResponse atualizar(@PathVariable UUID id, @Valid @RequestBody CampusRequest request) {
+    @Operation(summary = "Atualizar campus", description = "Atualiza os dados de um campus existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Campus atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "404", description = "Campus não encontrado")
+    })
+    public CampusResponse atualizar(
+            @Parameter(description = "ID do campus", required = true)
+            @PathVariable UUID id, 
+            @Valid @RequestBody CampusRequest request) {
         return service.atualizar(id, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletar campus", description = "Remove um campus do sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Campus deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Campus não encontrado")
+    })
+    public void deletar(
+            @Parameter(description = "ID do campus", required = true)
+            @PathVariable UUID id) {
         service.deletar(id);
     }
 }
