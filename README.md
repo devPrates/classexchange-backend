@@ -31,6 +31,12 @@ src/main/java/com/ClassExchange/
     └── ...
 ```
 
+## 📚 Documentação
+
+Veja a pasta `docs/` para documentação detalhada:
+- [Arquitetura](docs/arquitetura.md)
+- [API Reference](docs/api-reference.md)
+
 ## 🏗️ Arquitetura
 
 Cada caso de uso segue o padrão:
@@ -67,12 +73,6 @@ As configurações do H2 estão no arquivo `application-test.properties`. Para u
 4. **Acesse a documentação**
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - API Docs: http://localhost:8080/v3/api-docs
-
-## 📚 Documentação
-
-Veja a pasta `docs/` para documentação detalhada:
-- [Arquitetura](docs/arquitetura.md)
-- [API Reference](docs/api-reference.md)
 
 ## 🤝 Contribuição
 
