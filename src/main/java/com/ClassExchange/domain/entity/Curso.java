@@ -1,10 +1,9 @@
 package com.ClassExchange.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,5 +22,11 @@ public class Curso extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)
     private Campus campus;
+
+    @OneToMany(mappedBy = "curso")
+    private List<Disciplina> disciplinas;
+
+    @OneToMany(mappedBy = "curso")
+    private List<Turma> turmas;
 
 }
