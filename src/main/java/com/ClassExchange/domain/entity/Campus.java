@@ -27,4 +27,7 @@ public class Campus extends BaseEntity {
     @OneToMany(mappedBy = "campus")
     private List<Curso> cursos;
 
+    @OneToMany(mappedBy = "campus")
+    private List<DiretorEnsino> diretorEnsinos;
+
 }
