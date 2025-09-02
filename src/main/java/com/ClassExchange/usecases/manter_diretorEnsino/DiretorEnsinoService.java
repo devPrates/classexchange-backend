@@ -1,0 +1,105 @@
+package com.ClassExchange.usecases.manter_diretorEnsino;
+
+import com.ClassExchange.domain.entity.Campus;
+import com.ClassExchange.domain.entity.DiretorEnsino;
+import com.ClassExchange.domain.entity.Professor;
+import com.ClassExchange.usecases.manter_professores.ProfessorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+interface CampusRepository extends JpaRepository<Campus, UUID> {
+}
+
+@Service
+@Transactional
+public class DiretorEnsinoService {
+
+    @Autowired
+    private DiretorEnsinoRepository diretorEnsinoRepository;
+
+    @Autowired
+    private ProfessorRepository professorRepository;
+
+    @Autowired
+    private CampusRepository campusRepository;
+
+    public DiretorEnsinoResponse criar(DiretorEnsinoRequest request) {
+        Professor professor = professorRepository.findById(request.professorId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new RuntimeException("Campus não encontrado com ID: " + request.campusId()));
+
+        DiretorEnsino diretorEnsino = DiretorEnsino.builder()
+                .inicio(request.inicio())
+                .fim(request.fim())
+                .professor(professor)
+                .campus(campus)
+                .build();
+
+        DiretorEnsino diretorEnsinoSalvo = diretorEnsinoRepository.save(diretorEnsino);
+        return toResponse(diretorEnsinoSalvo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DiretorEnsinoResponse> listarTodos() {
+        return diretorEnsinoRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<DiretorEnsinoResponse> buscarPorId(UUID id) {
+        return diretorEnsinoRepository.findById(id)
+                .map(this::toResponse);
+    }
+
+    public DiretorEnsinoResponse atualizar(UUID id, DiretorEnsinoRequest request) {
+        DiretorEnsino diretorEnsino = diretorEnsinoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("DiretorEnsino não encontrado com ID: " + id));
+
+        Professor professor = professorRepository.findById(request.professorId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new RuntimeException("Campus não encontrado com ID: " + request.campusId()));
+
+        diretorEnsino.setInicio(request.inicio());
+        diretorEnsino.setFim(request.fim());
+        diretorEnsino.setProfessor(professor);
+        diretorEnsino.setCampus(campus);
+
+        DiretorEnsino diretorEnsinoAtualizado = diretorEnsinoRepository.save(diretorEnsino);
+        return toResponse(diretorEnsinoAtualizado);
+    }
+
+    public void deletar(UUID id) {
+        if (!diretorEnsinoRepository.existsById(id)) {
+            throw new RuntimeException("DiretorEnsino não encontrado com ID: " + id);
+        }
+        diretorEnsinoRepository.deleteById(id);
+    }
+
+    private DiretorEnsinoResponse toResponse(DiretorEnsino diretorEnsino) {
+        return new DiretorEnsinoResponse(
+                diretorEnsino.getId(),
+                diretorEnsino.getInicio(),
+                diretorEnsino.getFim(),
+                diretorEnsino.getProfessor().getId(),
+                diretorEnsino.getProfessor().getNome(),
+                diretorEnsino.getCampus().getId(),
+                diretorEnsino.getCampus().getNome(),
+                diretorEnsino.getCreatedAt(),
+                diretorEnsino.getUpdatedAt()
+        );
+    }
+}
