@@ -1,7 +1,7 @@
 package com.ClassExchange.usecases.manter_cursos;
 
-import com.ClassExchange.entity.Campus;
-import com.ClassExchange.entity.Curso;
+import com.ClassExchange.domain.entity.Campus;
+import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import lombok.RequiredArgsConstructor;

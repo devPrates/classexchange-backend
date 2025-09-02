@@ -1,6 +1,6 @@
 package com.ClassExchange.usecases.manter_campus;
 
-import com.ClassExchange.entity.Campus;
+import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

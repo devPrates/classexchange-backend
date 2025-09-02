@@ -1,11 +1,10 @@
-package com.ClassExchange.entity;
+package com.ClassExchange.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -13,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Campus extends BaseEntity {
+public class Curso extends BaseEntity {
 
     @Column(nullable = false)
     private String nome;
@@ -21,10 +20,8 @@ public class Campus extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String sigla;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @OneToMany(mappedBy = "campus")
-    private List<Curso> cursos;
+    @ManyToOne
+    @JoinColumn(name = "campus_id", nullable = false)
+    private Campus campus;
 
 }

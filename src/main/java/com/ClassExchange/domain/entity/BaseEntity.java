@@ -1,4 +1,4 @@
-package com.ClassExchange.entity;
+package com.ClassExchange.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

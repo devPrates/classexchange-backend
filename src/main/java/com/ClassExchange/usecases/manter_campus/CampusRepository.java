@@ -1,7 +1,7 @@
 package com.ClassExchange.usecases.manter_campus;
 
 
-import com.ClassExchange.entity.Campus;
+import com.ClassExchange.domain.entity.Campus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
