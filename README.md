@@ -6,7 +6,7 @@ API REST para gerenciamento acadêmico desenvolvida em Java Spring Boot. O Class
 
 ## 🚀 Tecnologias
 
-- **Java 17+**
+- **Java 21+**
 - **Spring Boot 3.x**
 - **Spring Data JPA**
 - **PostgreSQL**
