@@ -9,6 +9,8 @@ public record CampusResponse(
         String nome,
         String sigla,
         String email,
+        String telefone,
+        String endereco,
         List<CursoSimplificadoResponse> cursos,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

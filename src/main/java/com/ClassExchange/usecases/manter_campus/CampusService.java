@@ -22,6 +22,8 @@ public class CampusService {
                 .nome(request.nome())
                 .sigla(request.sigla())
                 .email(request.email())
+                .telefone(request.telefone())
+                .endereco(request.endereco())
                 .build();
 
         return toResponse(repository.save(campus));
@@ -45,6 +47,8 @@ public class CampusService {
         campus.setNome(request.nome());
         campus.setSigla(request.sigla());
         campus.setEmail(request.email());
+        campus.setTelefone(request.telefone());
+        campus.setEndereco(request.endereco());
 
         return toResponse(repository.save(campus));
     }
@@ -71,6 +75,8 @@ public class CampusService {
                 campus.getNome(),
                 campus.getSigla(),
                 campus.getEmail(),
+                campus.getTelefone(),
+                campus.getEndereco(),
                 cursos,
                 campus.getCreatedAt(),
                 campus.getUpdatedAt()

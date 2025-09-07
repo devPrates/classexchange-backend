@@ -24,6 +24,10 @@ public class Campus extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    private String telefone;
+
+    private String endereco;
+
     @OneToMany(mappedBy = "campus")
     private List<Curso> cursos;
 

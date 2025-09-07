@@ -16,5 +16,9 @@ public record CampusRequest(
 
         @NotBlank(message = "O e-mail é obrigatório")
         @Email(message = "O e-mail informado não é válido")
-        String email
+        String email,
+
+        String telefone,
+
+        String endereco
 ) {}
