@@ -2,6 +2,7 @@ package com.ClassExchange.usecases.manter_campus;
 
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.exception.NotFoundException;
+import com.ClassExchange.usecases.manter_cursos.CursoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class CampusService {
 
     private final CampusRepository repository;
+    private final CursoRepository cursoRepository;
 
     public CampusResponse criar(CampusRequest request) {
         Campus campus = Campus.builder()
@@ -55,11 +57,21 @@ public class CampusService {
     }
 
     private CampusResponse toResponse(Campus campus) {
+        List<CursoSimplificadoResponse> cursos = cursoRepository.findByCampus(campus)
+                .stream()
+                .map(curso -> new CursoSimplificadoResponse(
+                        curso.getId(),
+                        curso.getNome(),
+                        curso.getSigla()
+                ))
+                .toList();
+
         return new CampusResponse(
                 campus.getId(),
                 campus.getNome(),
                 campus.getSigla(),
                 campus.getEmail(),
+                cursos,
                 campus.getCreatedAt(),
                 campus.getUpdatedAt()
         );
