@@ -4,6 +4,8 @@ import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
+import com.ClassExchange.usecases.manter_disciplinas.DisciplinaRepository;
+import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ public class CursoService {
 
     private final CursoRepository repository;
     private final CampusRepository campusRepository;
+    private final DisciplinaRepository disciplinaRepository;
+    private final TurmaRepository turmaRepository;
+    private final CursoMapper mapper;
 
     public CursoResponse criar(CursoRequest request) {
         Campus campus = campusRepository.findById(request.campusId())
@@ -64,14 +69,16 @@ public class CursoService {
     }
 
     private CursoResponse toResponse(Curso curso) {
-        return new CursoResponse(
-                curso.getId(),
-                curso.getNome(),
-                curso.getSigla(),
-                curso.getCampus().getId(),
-                curso.getCampus().getNome(),
-                curso.getCreatedAt(),
-                curso.getUpdatedAt()
-        );
+        List<CursoResponse.DisciplinaSimplificada> disciplinas = disciplinaRepository.findByCurso(curso)
+                .stream()
+                .map(mapper::toDisciplinaSimplificada)
+                .toList();
+
+        List<CursoResponse.TurmaSimplificada> turmas = turmaRepository.findByCurso(curso)
+                .stream()
+                .map(mapper::toTurmaSimplificada)
+                .toList();
+
+        return mapper.toResponse(curso, disciplinas, turmas);
     }
 }

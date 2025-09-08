@@ -2,8 +2,6 @@
 
 Este documento define o padrão arquitetural, de código e de boas práticas para o desenvolvimento desta API em Java Spring Boot.
 
----
-
 ## Arquitetura do Projeto
 
 - O projeto deve utilizar Java Spring Boot.
@@ -20,8 +18,6 @@ Este documento define o padrão arquitetural, de código e de boas práticas par
 - Criar uma pasta `exception` para centralizar o tratamento global de erros e exceções.
 - Criar uma pasta `enums` para armazenar todos os tipos enumerados utilizados no projeto.
 
----
-
 ## BaseEntity
 
 - Todas as entidades devem herdar de `BaseEntity`.
@@ -29,8 +25,6 @@ Este documento define o padrão arquitetural, de código e de boas práticas par
   - Campo `id` do tipo UUID gerado automaticamente.
   - Campos `createdAt` e `updatedAt` para auditoria.
   - Lógica automática para preencher `createdAt` na criação e atualizar `updatedAt` em modificações (`@PrePersist` e `@PreUpdate`).
-
----
 
 ## 🧱 Padrão para CRUD
 
@@ -67,8 +61,6 @@ Para cada entidade:
    - Utilizar `@Valid` nos parâmetros de Request DTO para validação automática.
    - Evitar lógica de negócio no Controller — concentrar no Service.
 
----
-
 ## 📌 Tratamento Global de Exceções
 
 ### Pacote `exception`
@@ -89,8 +81,6 @@ Para cada entidade:
 - **NotFoundException.java**
   - Exceção para recurso não encontrado (`404 Not Found`).
 
----
-
 ## 📦 Dependências obrigatórias no Spring Initializr
 
 - Spring Web
@@ -100,16 +90,109 @@ Para cada entidade:
 - Spring Boot DevTools
 - Springdoc OpenAPI UI (Swagger)
 - Validation (`spring-boot-starter-validation`)
+- MapStruct (para mapeamento automático entre DTOs e Entities)
 
----
+## 🔄 MapStruct - Mapeamento Automático
 
-## 📂 Pacote de Enums
+### Configuração no pom.xml
+
+```xml
+<properties>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>17</source>
+                <target>17</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct-processor</artifactId>
+                        <version>${mapstruct.version}</version>
+                    </path>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-mapstruct-binding</artifactId>
+                        <version>0.2.0</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### Padrões de Uso
+
+1. **Mapper Interface**
+   - Nome: `<Entidade>Mapper`.
+   - Anotação: `@Mapper(componentModel = "spring")`.
+   - Localização: Mesmo pacote do caso de uso (`manter_<entidade>`).
+
+2. **Métodos de Mapeamento**
+   - `toResponse(Entity entity)` - Converte Entity para Response DTO.
+   - `toEntity(Request request)` - Converte Request DTO para Entity.
+   - `toResponseList(List<Entity> entities)` - Converte lista de entities.
+
+3. **Mapeamentos Customizados**
+   - Usar `@Mapping` para campos com nomes diferentes.
+   - Usar `@Mapping(target = "campo", ignore = true)` para ignorar campos.
+   - Usar `@Mapping(target = "campo", source = "objeto.campo")` para campos aninhados.
+
+### Exemplo de Mapper
+
+```java
+@Mapper(componentModel = "spring")
+public interface CursoMapper {
+    
+    @Mapping(target = "campusId", source = "curso.campus.id")
+    @Mapping(target = "campusNome", source = "curso.campus.nome")
+    CursoResponse toResponse(Curso curso, 
+                           List<CursoResponse.DisciplinaSimplificada> disciplinas,
+                           List<CursoResponse.TurmaSimplificada> turmas);
+    
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Curso toEntity(CursoRequest request);
+    
+    List<CursoResponse> toResponseList(List<Curso> cursos);
+}
+```
+
+### Boas Práticas MapStruct
+
+- Sempre usar `componentModel = "spring"` para integração com Spring.
+- Ignorar campos de auditoria (`id`, `createdAt`, `updatedAt`) ao converter Request para Entity.
+- Criar mappers específicos para DTOs aninhados quando necessário.
+- Usar `@Mapping` para documentar mapeamentos não óbvios.
+- Injetar mappers nos Services via `@Autowired` ou construtor.
+- Preferir mappers a conversões manuais para manter consistência.
+
+## Pacote de Enums
 
 - Criar um pacote chamado `enums` na raiz do projeto.
 - Cada enum deve ter nome no singular e seguir o padrão `UPPER_SNAKE_CASE` para os valores.
 - Usar enums para representar valores fixos no sistema (ex.: status, tipos, categorias).
-
----
 
 ## Boas Práticas
 
@@ -123,8 +206,6 @@ Para cada entidade:
 - Configurar Swagger/OpenAPI para documentação automática.
 - Garantir que todos os endpoints tratem erros de forma consistente via `ApiExceptionHandler`.
 - Sempre validar entradas de dados com `@Valid` e anotações do Jakarta Validation.
-
----
 
 **Objetivo:**  
 Este documento serve como guia oficial para manter a consistência do código e garantir que todas as novas funcionalidades sigam o mesmo padrão arquitetural e de desenvolvimento.
