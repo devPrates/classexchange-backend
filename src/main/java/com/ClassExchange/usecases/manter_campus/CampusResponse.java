@@ -11,7 +11,13 @@ public record CampusResponse(
         String email,
         String telefone,
         String endereco,
-        List<CursoSimplificadoResponse> cursos,
+        List<CursoSimplificado> cursos,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {}
+) {
+    public record CursoSimplificado(
+            UUID id,
+            String nome,
+            String sigla
+    ) {}
+}

@@ -16,6 +16,7 @@ public class CampusService {
 
     private final CampusRepository repository;
     private final CursoRepository cursoRepository;
+    private final CampusMapper mapper;
 
     public CampusResponse criar(CampusRequest request) {
         Campus campus = Campus.builder()
@@ -61,25 +62,11 @@ public class CampusService {
     }
 
     private CampusResponse toResponse(Campus campus) {
-        List<CursoSimplificadoResponse> cursos = cursoRepository.findByCampus(campus)
+        List<CampusResponse.CursoSimplificado> cursos = cursoRepository.findByCampus(campus)
                 .stream()
-                .map(curso -> new CursoSimplificadoResponse(
-                        curso.getId(),
-                        curso.getNome(),
-                        curso.getSigla()
-                ))
+                .map(mapper::toCursoSimplificado)
                 .toList();
 
-        return new CampusResponse(
-                campus.getId(),
-                campus.getNome(),
-                campus.getSigla(),
-                campus.getEmail(),
-                campus.getTelefone(),
-                campus.getEndereco(),
-                cursos,
-                campus.getCreatedAt(),
-                campus.getUpdatedAt()
-        );
+        return mapper.toResponseWithCursos(campus, cursos);
     }
 }
