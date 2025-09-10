@@ -16,8 +16,8 @@ public class Disciplina extends BaseEntity {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
-    private double cargaHoraria;
+    @Column(nullable = true)
+    private Double cargaHoraria;
 
     @Column(columnDefinition = "TEXT")
     private String ementa;
