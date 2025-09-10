@@ -12,7 +12,7 @@ public record DisciplinaRequest(
         @NotNull(message = "Carga horária é obrigatória")
         @Positive(message = "Carga horária deve ser positiva")
         @DecimalMax(value = "999.9", message = "Carga horária não pode exceder 999.9 horas")
-        Double cargahoraria,
+        Double cargaHoraria,
 
         @Size(max = 1000, message = "Ementa não pode exceder 1000 caracteres")
         String ementa,

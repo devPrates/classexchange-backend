@@ -17,7 +17,7 @@ public interface CursoMapper {
     @Mapping(target = "turmas", source = "turmas")
     CursoResponse toResponse(Curso curso, List<CursoResponse.DisciplinaSimplificada> disciplinas, List<CursoResponse.TurmaSimplificada> turmas);
 
-    @Mapping(target = "cargaHoraria", source = "cargahoraria")
+    @Mapping(target = "cargaHoraria", source = "cargaHoraria")
     CursoResponse.DisciplinaSimplificada toDisciplinaSimplificada(Disciplina disciplina);
 
     CursoResponse.TurmaSimplificada toTurmaSimplificada(Turma turma);

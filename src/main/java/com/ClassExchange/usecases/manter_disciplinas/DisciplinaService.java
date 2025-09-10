@@ -24,7 +24,7 @@ public class DisciplinaService {
 
         Disciplina disciplina = Disciplina.builder()
                 .nome(request.nome())
-                .cargahoraria(request.cargahoraria())
+                .cargaHoraria(request.cargaHoraria())
                 .ementa(request.ementa())
                 .curso(curso)
                 .build();
@@ -51,7 +51,7 @@ public class DisciplinaService {
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
         disciplina.setNome(request.nome());
-        disciplina.setCargahoraria(request.cargahoraria());
+        disciplina.setCargaHoraria(request.cargaHoraria());
         disciplina.setEmenta(request.ementa());
         disciplina.setCurso(curso);
 
@@ -69,7 +69,7 @@ public class DisciplinaService {
         return new DisciplinaResponse(
                 disciplina.getId(),
                 disciplina.getNome(),
-                disciplina.getCargahoraria(),
+                disciplina.getCargaHoraria(),
                 disciplina.getEmenta(),
                 disciplina.getCurso().getId(),
                 disciplina.getCurso().getNome(),
