@@ -3,6 +3,7 @@ package com.ClassExchange.usecases.manter_campus;
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
+import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class CampusService {
                 .nome(request.nome())
                 .sigla(request.sigla())
                 .email(request.email())
+                .slug(SlugUtils.generateSlug(request.nome()))
                 .telefone(request.telefone())
                 .endereco(request.endereco())
                 .build();
@@ -41,6 +43,11 @@ public class CampusService {
                 .map(this::toResponse);
     }
 
+    public Optional<CampusResponse> buscarPorSlug(String slug) {
+        return repository.findBySlug(slug)
+                .map(this::toResponse);
+    }
+
     public CampusResponse atualizar(UUID id, CampusRequest request) {
         Campus campus = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
@@ -48,6 +55,7 @@ public class CampusService {
         campus.setNome(request.nome());
         campus.setSigla(request.sigla());
         campus.setEmail(request.email());
+        campus.setSlug(SlugUtils.generateSlug(request.nome()));
         campus.setTelefone(request.telefone());
         campus.setEndereco(request.endereco());
 

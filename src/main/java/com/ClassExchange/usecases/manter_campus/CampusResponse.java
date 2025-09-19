@@ -9,6 +9,7 @@ public record CampusResponse(
         String nome,
         String sigla,
         String email,
+        String slug,
         String telefone,
         String endereco,
         List<CursoSimplificado> cursos,

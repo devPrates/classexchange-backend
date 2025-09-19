@@ -54,6 +54,19 @@ public class CampusController {
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
     }
 
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Buscar campus por slug", description = "Retorna um campus específico pelo seu slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Campus encontrado"),
+            @ApiResponse(responseCode = "404", description = "Campus não encontrado")
+    })
+    public CampusResponse buscarPorSlug(
+            @Parameter(description = "Slug do campus", required = true)
+            @PathVariable String slug) {
+        return service.buscarPorSlug(slug)
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar campus", description = "Atualiza os dados de um campus existente")
     @ApiResponses(value = {
