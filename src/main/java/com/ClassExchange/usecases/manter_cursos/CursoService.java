@@ -6,6 +6,7 @@ import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import com.ClassExchange.usecases.manter_disciplinas.DisciplinaRepository;
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
+import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class CursoService {
         Curso curso = Curso.builder()
                 .nome(request.nome())
                 .sigla(request.sigla())
+                .slug(SlugUtils.generateSlug(request.nome()))
                 .campus(campus)
                 .build();
 
@@ -47,6 +49,11 @@ public class CursoService {
                 .map(this::toResponse);
     }
 
+    public Optional<CursoResponse> buscarPorSlug(String slug) {
+        return repository.findBySlug(slug)
+                .map(this::toResponse);
+    }
+
     public CursoResponse atualizar(UUID id, CursoRequest request) {
         Curso curso = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
@@ -56,6 +63,7 @@ public class CursoService {
 
         curso.setNome(request.nome());
         curso.setSigla(request.sigla());
+        curso.setSlug(SlugUtils.generateSlug(request.nome()));
         curso.setCampus(campus);
 
         return toResponse(repository.save(curso));

@@ -19,6 +19,9 @@ public class Curso extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String sigla;
 
+    @Column(nullable = false, unique = true, length = 100)
+    private String slug;
+
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)
     private Campus campus;

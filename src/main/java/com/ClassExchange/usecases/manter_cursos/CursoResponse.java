@@ -8,6 +8,7 @@ public record CursoResponse(
         UUID id,
         String nome,
         String sigla,
+        String slug,
         UUID campusId,
         String campusNome,
         List<DisciplinaSimplificada> disciplinas,

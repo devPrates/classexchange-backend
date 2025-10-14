@@ -80,4 +80,17 @@ public class CursoController {
             @PathVariable UUID id) {
         service.deletar(id);
     }
+
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Buscar curso por slug", description = "Retorna um curso específico pelo seu slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Curso encontrado"),
+            @ApiResponse(responseCode = "404", description = "Curso não encontrado")
+    })
+    public CursoResponse buscarPorSlug(
+            @Parameter(description = "Slug do curso", required = true)
+            @PathVariable String slug) {
+        return service.buscarPorSlug(slug)
+                .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
+    }
 }
