@@ -25,6 +25,8 @@ public class ProfessorClasseService {
 
     @Autowired
     private ClasseRepository classeRepository;
+    @Autowired
+    private ProfessorClasseMapper mapper;
 
     public ProfessorClasseResponse criar(ProfessorClasseRequest request) {
         Professor professor = professorRepository.findById(request.professorId())
@@ -85,16 +87,6 @@ public class ProfessorClasseService {
     }
 
     private ProfessorClasseResponse toResponse(ProfessorClasse professorClasse) {
-        return new ProfessorClasseResponse(
-                professorClasse.getId(),
-                professorClasse.getInicio(),
-                professorClasse.getFim(),
-                professorClasse.getProfessor().getId(),
-                professorClasse.getProfessor().getNome(),
-                professorClasse.getClasse().getId(),
-                "TODO: Implementar nome da classe", // TODO: Implementar método para obter nome da classe
-                professorClasse.getCreatedAt(),
-                professorClasse.getUpdatedAt()
-        );
+        return mapper.toResponse(professorClasse);
     }
 }

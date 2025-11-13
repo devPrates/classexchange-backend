@@ -15,6 +15,7 @@ import java.util.UUID;
 public class CargaHorariaService {
 
     private final CargaHorariaRepository repository;
+    private final CargaHorariaMapper mapper;
 
     @Transactional
     public CargaHorariaResponse criar(CargaHorariaRequest request) {
@@ -59,13 +60,6 @@ public class CargaHorariaService {
     }
 
     private CargaHorariaResponse toResponse(CargaHoraria cargaHoraria) {
-        return new CargaHorariaResponse(
-                cargaHoraria.getId(),
-                cargaHoraria.getNome(),
-                cargaHoraria.getDuracao(),
-                cargaHoraria.getMedidaTempo(),
-                cargaHoraria.getCreatedAt(),
-                cargaHoraria.getUpdatedAt()
-        );
+        return mapper.toResponse(cargaHoraria);
     }
 }

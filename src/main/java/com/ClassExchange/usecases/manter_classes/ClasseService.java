@@ -25,6 +25,7 @@ public class ClasseService {
     private final TurmaRepository turmaRepository;
     private final CargaHorariaRepository cargaHorariaRepository;
     private final LocalRepository localRepository;
+    private final ClasseMapper mapper;
 
     @Transactional
     public ClasseResponse criar(ClasseRequest request) {
@@ -116,21 +117,6 @@ public class ClasseService {
     }
 
     private ClasseResponse toResponse(Classe classe) {
-        return new ClasseResponse(
-                classe.getId(),
-                classe.getVagas(),
-                classe.getNumeroAulas(),
-                classe.getInicio(),
-                classe.getDisciplina().getId(),
-                classe.getDisciplina().getNome(),
-                classe.getTurma().getId(),
-                classe.getTurma().getNome(),
-                classe.getCargaHoraria() != null ? classe.getCargaHoraria().getId() : null,
-                classe.getCargaHoraria() != null ? classe.getCargaHoraria().getNome() : null,
-                classe.getLocal() != null ? classe.getLocal().getId() : null,
-                classe.getLocal() != null ? classe.getLocal().getNome() : null,
-                classe.getCreatedAt(),
-                classe.getUpdatedAt()
-        );
+        return mapper.toResponse(classe);
     }
 }

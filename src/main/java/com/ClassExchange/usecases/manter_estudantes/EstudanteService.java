@@ -15,6 +15,7 @@ import java.util.UUID;
 public class EstudanteService {
 
     private final EstudanteRepository repository;
+    private final EstudanteMapper mapper;
 
     @Transactional
     public EstudanteResponse criar(EstudanteRequest request) {
@@ -60,12 +61,6 @@ public class EstudanteService {
     }
 
     private EstudanteResponse toResponse(Estudante estudante) {
-        return new EstudanteResponse(
-                estudante.getId(),
-                estudante.getNome(),
-                estudante.getEmail(),
-                estudante.getCreatedAt(),
-                estudante.getUpdatedAt()
-        );
+        return mapper.toResponse(estudante);
     }
 }

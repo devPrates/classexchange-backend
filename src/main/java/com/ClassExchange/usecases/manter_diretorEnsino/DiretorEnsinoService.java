@@ -25,6 +25,8 @@ public class DiretorEnsinoService {
 
     @Autowired
     private CampusRepository campusRepository;
+    @Autowired
+    private DiretorEnsinoMapper mapper;
 
     public DiretorEnsinoResponse criar(DiretorEnsinoRequest request) {
         Professor professor = professorRepository.findById(request.professorId())
@@ -85,16 +87,6 @@ public class DiretorEnsinoService {
     }
 
     private DiretorEnsinoResponse toResponse(DiretorEnsino diretorEnsino) {
-        return new DiretorEnsinoResponse(
-                diretorEnsino.getId(),
-                diretorEnsino.getInicio(),
-                diretorEnsino.getFim(),
-                diretorEnsino.getProfessor().getId(),
-                diretorEnsino.getProfessor().getNome(),
-                diretorEnsino.getCampus().getId(),
-                diretorEnsino.getCampus().getNome(),
-                diretorEnsino.getCreatedAt(),
-                diretorEnsino.getUpdatedAt()
-        );
+        return mapper.toResponse(diretorEnsino);
     }
 }

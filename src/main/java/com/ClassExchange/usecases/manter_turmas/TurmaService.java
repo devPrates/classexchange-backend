@@ -17,6 +17,7 @@ public class TurmaService {
 
     private final TurmaRepository repository;
     private final CursoRepository cursoRepository;
+    private final TurmaMapper mapper;
 
     public TurmaResponse criar(TurmaRequest request) {
         Curso curso = cursoRepository.findById(request.cursoId())
@@ -64,14 +65,6 @@ public class TurmaService {
     }
 
     private TurmaResponse toResponse(Turma turma) {
-        return new TurmaResponse(
-                turma.getId(),
-                turma.getNome(),
-                turma.getNumero(),
-                turma.getCurso().getId(),
-                turma.getCurso().getNome(),
-                turma.getCreatedAt(),
-                turma.getUpdatedAt()
-        );
+        return mapper.toResponse(turma);
     }
 }

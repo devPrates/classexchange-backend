@@ -15,6 +15,8 @@ public class ProfessorService {
 
     @Autowired
     private ProfessorRepository professorRepository;
+    @Autowired
+    private ProfessorMapper mapper;
 
     public ProfessorResponse criar(ProfessorRequest request) {
         Professor professor = Professor.builder()
@@ -63,14 +65,6 @@ public class ProfessorService {
     }
 
     private ProfessorResponse toResponse(Professor professor) {
-        return new ProfessorResponse(
-                professor.getId(),
-                professor.getNome(),
-                professor.getEmail(),
-                professor.getSiape(),
-                professor.getCelular(),
-                professor.getCreatedAt(),
-                professor.getUpdatedAt()
-        );
+        return mapper.toResponse(professor);
     }
 }

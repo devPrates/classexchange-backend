@@ -22,6 +22,7 @@ public class PeriodoService {
     private final PeriodoRepository periodoRepository;
     private final DisciplinaRepository disciplinaRepository;
     private final TurmaRepository turmaRepository;
+    private final PeriodoMapper mapper;
 
     @Transactional
     public PeriodoResponse criar(PeriodoRequest request) {
@@ -104,20 +105,6 @@ public class PeriodoService {
     }
 
     private PeriodoResponse toResponse(Periodo periodo) {
-        return new PeriodoResponse(
-                periodo.getId(),
-                periodo.getNome(),
-                periodo.getTipoPeriodo(),
-                periodo.getNumero(),
-                periodo.getAno(),
-                periodo.getInicio(),
-                periodo.getFim(),
-                periodo.getDisciplina().getId(),
-                periodo.getDisciplina().getNome(),
-                periodo.getTurma().getId(),
-                periodo.getTurma().getNome(),
-                periodo.getCreatedAt(),
-                periodo.getUpdatedAt()
-        );
+        return mapper.toResponse(periodo);
     }
 }

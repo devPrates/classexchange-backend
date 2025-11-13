@@ -17,6 +17,7 @@ public class DisciplinaService {
 
     private final DisciplinaRepository repository;
     private final CursoRepository cursoRepository;
+    private final DisciplinaMapper mapper;
 
     public DisciplinaResponse criar(DisciplinaRequest request) {
         Curso curso = cursoRepository.findById(request.cursoId())
@@ -66,15 +67,6 @@ public class DisciplinaService {
     }
 
     private DisciplinaResponse toResponse(Disciplina disciplina) {
-        return new DisciplinaResponse(
-                disciplina.getId(),
-                disciplina.getNome(),
-                disciplina.getCargaHoraria(),
-                disciplina.getEmenta(),
-                disciplina.getCurso().getId(),
-                disciplina.getCurso().getNome(),
-                disciplina.getCreatedAt(),
-                disciplina.getUpdatedAt()
-        );
+        return mapper.toResponse(disciplina);
     }
 }

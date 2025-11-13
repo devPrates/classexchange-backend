@@ -15,6 +15,7 @@ import java.util.UUID;
 public class LocalService {
 
     private final LocalRepository repository;
+    private final LocalMapper mapper;
 
     @Transactional
     public LocalResponse criar(LocalRequest request) {
@@ -55,11 +56,6 @@ public class LocalService {
     }
 
     private LocalResponse toResponse(Local local) {
-        return new LocalResponse(
-                local.getId(),
-                local.getNome(),
-                local.getCreatedAt(),
-                local.getUpdatedAt()
-        );
+        return mapper.toResponse(local);
     }
 }

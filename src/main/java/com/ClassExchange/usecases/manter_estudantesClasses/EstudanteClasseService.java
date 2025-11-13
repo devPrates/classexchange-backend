@@ -21,6 +21,7 @@ public class EstudanteClasseService {
     private final EstudanteClasseRepository repository;
     private final EstudanteRepository estudanteRepository;
     private final ClasseRepository classeRepository;
+    private final EstudanteClasseMapper mapper;
 
     @Transactional
     public EstudanteClasseResponse criar(EstudanteClasseRequest request) {
@@ -84,17 +85,6 @@ public class EstudanteClasseService {
     }
 
     private EstudanteClasseResponse toResponse(EstudanteClasse estudanteClasse) {
-        return new EstudanteClasseResponse(
-                estudanteClasse.getId(),
-                estudanteClasse.getMatricula(),
-                estudanteClasse.getVinculoCurso(),
-                estudanteClasse.getSituacao(),
-                estudanteClasse.getEstudante().getId(),
-                estudanteClasse.getEstudante().getNome(),
-                estudanteClasse.getClasse().getId(),
-                "Classe " + estudanteClasse.getClasse().getId(),
-                estudanteClasse.getCreatedAt(),
-                estudanteClasse.getUpdatedAt()
-        );
+        return mapper.toResponse(estudanteClasse);
     }
 }

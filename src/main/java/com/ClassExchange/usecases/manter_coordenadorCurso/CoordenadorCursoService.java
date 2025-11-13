@@ -25,6 +25,8 @@ public class CoordenadorCursoService {
 
     @Autowired
     private CursoRepository cursoRepository;
+    @Autowired
+    private CoordenadorCursoMapper mapper;
 
     public CoordenadorCursoResponse criar(CoordenadorCursoRequest request) {
         Professor professor = professorRepository.findById(request.professorId())
@@ -85,16 +87,6 @@ public class CoordenadorCursoService {
     }
 
     private CoordenadorCursoResponse toResponse(CoordenadorCurso coordenadorCurso) {
-        return new CoordenadorCursoResponse(
-                coordenadorCurso.getId(),
-                coordenadorCurso.getInicio(),
-                coordenadorCurso.getFim(),
-                coordenadorCurso.getProfessor().getId(),
-                coordenadorCurso.getProfessor().getNome(),
-                coordenadorCurso.getCurso().getId(),
-                coordenadorCurso.getCurso().getNome(),
-                coordenadorCurso.getCreatedAt(),
-                coordenadorCurso.getUpdatedAt()
-        );
+        return mapper.toResponse(coordenadorCurso);
     }
 }
