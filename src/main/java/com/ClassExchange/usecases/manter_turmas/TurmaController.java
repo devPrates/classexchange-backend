@@ -41,6 +41,19 @@ public class TurmaController {
         return service.listarTodos();
     }
 
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Buscar turma por slug", description = "Retorna uma turma específica pelo seu slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Turma encontrada"),
+            @ApiResponse(responseCode = "404", description = "Turma não encontrada")
+    })
+    public TurmaResponse buscarPorSlug(
+            @Parameter(description = "Slug da turma", required = true)
+            @PathVariable String slug) {
+        return service.buscarPorSlug(slug)
+                .orElseThrow(() -> new NotFoundException("Turma não encontrada"));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar turma por ID", description = "Retorna uma turma específica pelo seu ID")
     @ApiResponses(value = {

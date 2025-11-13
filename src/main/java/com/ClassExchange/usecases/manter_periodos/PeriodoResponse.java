@@ -9,6 +9,7 @@ import java.util.UUID;
 public record PeriodoResponse(
         UUID id,
         String nome,
+        String slug,
         TipoPeriodo tipoPeriodo,
         Integer numero,
         Integer ano,

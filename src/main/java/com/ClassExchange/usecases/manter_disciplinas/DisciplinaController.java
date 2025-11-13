@@ -41,6 +41,19 @@ public class DisciplinaController {
         return service.listarTodos();
     }
 
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Buscar disciplina por slug", description = "Retorna uma disciplina específica pelo seu slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Disciplina encontrada"),
+            @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+    })
+    public DisciplinaResponse buscarPorSlug(
+            @Parameter(description = "Slug da disciplina", required = true)
+            @PathVariable String slug) {
+        return service.buscarPorSlug(slug)
+                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada"));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar disciplina por ID", description = "Retorna uma disciplina específica pelo seu ID")
     @ApiResponses(value = {

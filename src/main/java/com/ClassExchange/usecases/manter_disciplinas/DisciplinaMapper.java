@@ -11,4 +11,3 @@ public interface DisciplinaMapper {
     @Mapping(target = "cursoNome", source = "disciplina.curso.nome")
     DisciplinaResponse toResponse(Disciplina disciplina);
 }
-

@@ -1,0 +1,211 @@
+Table Campus {
+  id uuid [pk]
+  nome varchar [not null]
+  sigla varchar(10) [not null]
+  email varchar [not null, unique]
+  slug varchar(100) [not null, unique]
+  telefone varchar
+  endereco varchar
+}
+
+Table Curso {
+  id uuid [pk]
+  nome varchar [not null]
+  sigla varchar(10) [not null]
+  slug varchar(100) [not null, unique]
+  campus_id uuid [not null, ref: > Campus.id]
+}
+
+Table Disciplina {
+  id uuid [pk]
+  nome varchar [not null]
+  carga_horaria double
+  ementa text
+  curso_id uuid [not null, ref: > Curso.id]
+}
+
+Table Turma {
+  id uuid [pk]
+  nome varchar [not null]
+  numero int [not null]
+  curso_id uuid [not null, ref: > Curso.id]
+}
+
+Table Periodo {
+  id uuid [pk]
+  nome varchar [not null]
+  tipo_periodo TipoPeriodo [not null]
+  numero int [not null]
+  ano int [not null]
+  inicio date [not null]
+  fim date [not null]
+  disciplina_id uuid [not null, ref: > Disciplina.id]
+  turma_id uuid [not null, ref: > Turma.id]
+}
+
+Table CargaHoraria {
+  id uuid [pk]
+  nome varchar [not null]
+  duracao int [not null]
+  medida_tempo MedidaTempo [not null]
+}
+
+Table Local {
+  id uuid [pk]
+  nome varchar [not null]
+}
+
+Table Classe {
+  id uuid [pk]
+  vagas int [not null]
+  numero_aulas int [not null]
+  inicio date [not null]
+  disciplina_id uuid [not null, ref: > Disciplina.id]
+  turma_id uuid [not null, ref: > Turma.id]
+  carga_horaria_id uuid [not null, ref: > CargaHoraria.id]
+  local_id uuid [not null, ref: > Local.id]
+}
+
+Table Horario {
+  id uuid [pk]
+  dia_da_semana int [not null]
+  hora_inicio varchar [not null]
+  hora_fim varchar [not null]
+  classe_id uuid [not null, ref: > Classe.id]
+}
+
+Table Estudante {
+  id uuid [pk]
+  nome varchar [not null]
+  email varchar [not null, unique]
+}
+
+Table EstudanteClasse {
+  id uuid [pk]
+  matricula varchar [not null]
+  vinculo_curso date [not null]
+  situacao SituacaoClasse [not null]
+  estudante_id uuid [not null, ref: > Estudante.id]
+  classe_id uuid [not null, ref: > Classe.id]
+}
+
+Table Professor {
+  id uuid [pk]
+  nome varchar [not null]
+  email varchar [not null, unique]
+  siape varchar [not null, unique]
+  celular varchar [not null]
+}
+
+Table ProfessorClasse {
+  id uuid [pk]
+  inicio date [not null]
+  fim date
+  professor_id uuid [not null, ref: > Professor.id]
+  classe_id uuid [not null, ref: > Classe.id]
+}
+
+Table CoordenadorCurso {
+  id uuid [pk]
+  inicio date [not null]
+  fim date
+  professor_id uuid [not null, ref: > Professor.id]
+  curso_id uuid [not null, ref: > Curso.id]
+}
+
+Table DiretorEnsino {
+  id uuid [pk]
+  inicio date [not null]
+  fim date
+  professor_id uuid [not null, ref: > Professor.id]
+  campus_id uuid [not null, ref: > Campus.id]
+}
+
+Enum MedidaTempo {
+  MINUTOS
+  HORAS
+}
+
+Enum TipoPeriodo {
+  ANUAL
+  SEMESTRAL
+  BIMESTRAL
+}
+
+Enum SituacaoClasse {
+  EM_CURSO
+  EVADIDO
+}
+
+Table Aula {
+  id uuid [pk]
+  sequencia int [not null]
+  data date [not null]
+  horario_inicio varchar [not null]
+  hora_fim varchar [not null]
+  classe_id uuid [not null, ref: > Classe.id]
+}
+
+Table TrocaAula {
+  id uuid [pk]
+  sequencia int [not null]
+  data_ausencia date [not null]
+  data_reposicao date [not null]
+  aula_trocada_id uuid [not null, ref: > Aula.id]
+  aula_reposicao_id uuid [not null, ref: > Aula.id]
+  solicitante_id uuid [not null, ref: > Professor.id]
+  substituto_id uuid [not null, ref: > Professor.id]
+}
+
+Table Substituicao {
+  id uuid [pk]
+  objetivo_aula varchar
+  conteudo_ministrar varchar
+  atividades varchar
+  substituto_id uuid [not null, ref: > Professor.id]
+}
+
+Table SolicitacaoSubstituicaoAula {
+  id uuid [pk]
+  emissao datetime [not null]
+  motivo varchar
+  solicitante_id uuid [not null, ref: > Professor.id]
+  substituicao_id uuid [not null, ref: > Substituicao.id]
+}
+
+Table ParecerSubstituicao {
+  id uuid [pk]
+  sequencia int [not null]
+  autorizado boolean [not null]
+  emissao datetime [not null]
+  manifestacao datetime
+  justificativa varchar
+  solicitacao_substituicao_id uuid [not null, ref: > SolicitacaoSubstituicaoAula.id]
+  chefe_id uuid [not null, ref: > Professor.id]
+}
+
+Table MotivoAusencia {
+  id uuid [pk]
+  nome varchar [not null]
+}
+
+Table SolicitacaoTrocaAula {
+  id uuid [pk]
+  emissao datetime [not null]
+  motivo varchar
+  inicio_afastamento date
+  fim_afastamento date
+  solicitante_id uuid [not null, ref: > Professor.id]
+  motivo_ausencia_id uuid [ref: > MotivoAusencia.id]
+}
+
+Table ParecerTroca {
+  id uuid [pk]
+  sequencia int [not null]
+  autorizado boolean [not null]
+  emissao datetime [not null]
+  manifestacao datetime
+  justificativa varchar
+  solicitacao_troca_id uuid [not null, ref: > SolicitacaoTrocaAula.id]
+  chefe_id uuid [not null, ref: > Professor.id]
+}

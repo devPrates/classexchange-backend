@@ -6,6 +6,7 @@ import java.util.UUID;
 public record DisciplinaResponse(
         UUID id,
         String nome,
+        String slug,
         Double cargaHoraria,
         String ementa,
         UUID cursoId,

@@ -4,6 +4,7 @@ import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Turma;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
+import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class TurmaService {
 
         Turma turma = Turma.builder()
                 .nome(request.nome())
+                .slug(SlugUtils.generateSlug(request.nome()))
                 .numero(request.numero())
                 .curso(curso)
                 .build();
@@ -51,6 +53,7 @@ public class TurmaService {
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
         turma.setNome(request.nome());
+        turma.setSlug(SlugUtils.generateSlug(request.nome()));
         turma.setNumero(request.numero());
         turma.setCurso(curso);
 
@@ -62,6 +65,11 @@ public class TurmaService {
             throw new NotFoundException("Turma não encontrada");
         }
         repository.deleteById(id);
+    }
+
+    public Optional<TurmaResponse> buscarPorSlug(String slug) {
+        return repository.findBySlug(slug)
+                .map(this::toResponse);
     }
 
     private TurmaResponse toResponse(Turma turma) {

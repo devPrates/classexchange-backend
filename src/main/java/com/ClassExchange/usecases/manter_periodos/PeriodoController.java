@@ -42,6 +42,20 @@ public class PeriodoController {
         return ResponseEntity.ok(periodos);
     }
 
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Buscar período por slug", description = "Retorna um período específico pelo seu slug")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Período encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Período não encontrado")
+    })
+    public ResponseEntity<PeriodoResponse> buscarPorSlug(
+            @Parameter(description = "Slug do período", required = true)
+            @PathVariable String slug) {
+        return periodoService.buscarPorSlug(slug)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar período por ID", description = "Retorna um período específico pelo seu ID")
     @ApiResponses(value = {

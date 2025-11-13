@@ -16,6 +16,9 @@ public class Turma extends BaseEntity {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false, unique = true, length = 100)
+    private String slug;
+
     @Column(nullable = false)
     private int numero;
 

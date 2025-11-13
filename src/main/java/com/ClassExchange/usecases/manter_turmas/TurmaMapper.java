@@ -11,4 +11,3 @@ public interface TurmaMapper {
     @Mapping(target = "cursoNome", source = "turma.curso.nome")
     TurmaResponse toResponse(Turma turma);
 }
-

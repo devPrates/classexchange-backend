@@ -4,6 +4,7 @@ import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Disciplina;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
+import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class DisciplinaService {
 
         Disciplina disciplina = Disciplina.builder()
                 .nome(request.nome())
+                .slug(SlugUtils.generateSlug(request.nome()))
                 .cargaHoraria(request.cargaHoraria())
                 .ementa(request.ementa())
                 .curso(curso)
@@ -52,6 +54,7 @@ public class DisciplinaService {
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
         disciplina.setNome(request.nome());
+        disciplina.setSlug(SlugUtils.generateSlug(request.nome()));
         disciplina.setCargaHoraria(request.cargaHoraria());
         disciplina.setEmenta(request.ementa());
         disciplina.setCurso(curso);
@@ -64,6 +67,11 @@ public class DisciplinaService {
             throw new NotFoundException("Disciplina não encontrada");
         }
         repository.deleteById(id);
+    }
+
+    public Optional<DisciplinaResponse> buscarPorSlug(String slug) {
+        return repository.findBySlug(slug)
+                .map(this::toResponse);
     }
 
     private DisciplinaResponse toResponse(Disciplina disciplina) {

@@ -13,4 +13,3 @@ public interface PeriodoMapper {
     @Mapping(target = "turmaNome", source = "periodo.turma.nome")
     PeriodoResponse toResponse(Periodo periodo);
 }
-

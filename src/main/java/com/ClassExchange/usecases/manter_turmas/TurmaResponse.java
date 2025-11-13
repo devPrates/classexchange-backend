@@ -6,6 +6,7 @@ import java.util.UUID;
 public record TurmaResponse(
         UUID id,
         String nome,
+        String slug,
         Integer numero,
         UUID cursoId,
         String cursoNome,
