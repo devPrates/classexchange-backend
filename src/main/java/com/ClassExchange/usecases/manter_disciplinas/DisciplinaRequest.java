@@ -9,10 +9,8 @@ public record DisciplinaRequest(
         @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
         String nome,
 
-        @NotNull(message = "Período é obrigatório")
-        @Min(value = 1, message = "Período deve ser no mínimo 1")
-        @Max(value = 20, message = "Período não pode exceder 20")
-        Integer periodo,
+        @NotNull(message = "ID do período é obrigatório")
+        java.util.UUID periodoId,
 
         @NotNull(message = "Carga horária é obrigatória")
         @Positive(message = "Carga horária deve ser positiva")

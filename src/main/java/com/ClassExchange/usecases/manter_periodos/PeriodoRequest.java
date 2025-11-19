@@ -31,8 +31,7 @@ public record PeriodoRequest(
         @Future(message = "Data de fim deve ser futura")
         LocalDate fim,
 
-        @NotNull(message = "ID da disciplina é obrigatório")
-        UUID disciplinaId,
+        
 
         @NotNull(message = "ID da turma é obrigatório")
         UUID turmaId

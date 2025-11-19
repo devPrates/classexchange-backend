@@ -25,4 +25,7 @@ public class DisciplinaTurma extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "local_id", nullable = false)
     private Local local;
+
+    @OneToMany(mappedBy = "disciplinaTurma")
+    private java.util.List<ProfessorDisciplina> professorDisciplinas;
 }

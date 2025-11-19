@@ -1,10 +1,18 @@
 package com.ClassExchange.usecases.manter_estudantes;
 
 import com.ClassExchange.domain.entity.Estudante;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface EstudanteMapper {
-    EstudanteResponse toResponse(Estudante estudante);
+@Component
+public class EstudanteMapper {
+    public EstudanteResponse toResponse(Estudante estudante) {
+        return new EstudanteResponse(
+                estudante.getId(),
+                estudante.getNome(),
+                estudante.getEmail(),
+                estudante.getCreatedAt(),
+                estudante.getUpdatedAt()
+        );
+    }
 }
 

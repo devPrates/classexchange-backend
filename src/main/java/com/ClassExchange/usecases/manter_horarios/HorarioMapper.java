@@ -3,39 +3,42 @@ package com.ClassExchange.usecases.manter_horarios;
 import com.ClassExchange.domain.entity.CargaHoraria;
 import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.Horario;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface HorarioMapper {
+@Component
+public class HorarioMapper {
 
+    public HorarioResponse toResponse(Horario horario) {
+        return new HorarioResponse(
+                horario.getId(),
+                horario.getDiaDaSemana(),
+                horario.getHoraInicio(),
+                horario.getHoraFim(),
+                horario.getDisciplinaTurma() != null ? horario.getDisciplinaTurma().getId() : null,
+                horario.getDisciplinaTurma() != null && horario.getDisciplinaTurma().getDisciplina() != null ? horario.getDisciplinaTurma().getDisciplina().getNome() : null,
+                horario.getDisciplinaTurma() != null && horario.getDisciplinaTurma().getTurma() != null ? horario.getDisciplinaTurma().getTurma().getNome() : null,
+                horario.getCargaHoraria() != null ? horario.getCargaHoraria().getId() : null,
+                horario.getCargaHoraria() != null ? horario.getCargaHoraria().getNome() : null,
+                horario.getCreatedAt(),
+                horario.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "disciplinaTurmaId", source = "horario.disciplinaTurma.id")
-    @Mapping(target = "disciplinaNome", source = "horario.disciplinaTurma.disciplina.nome")
-    @Mapping(target = "turmaNome", source = "horario.disciplinaTurma.turma.nome")
-    @Mapping(target = "cargaHorariaId", source = "horario.cargaHoraria.id")
-    @Mapping(target = "cargaHorariaNome", source = "horario.cargaHoraria.nome")
-    HorarioResponse toResponse(Horario horario);
+    public Horario toEntity(HorarioRequest request, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria) {
+        Horario horario = new Horario();
+        horario.setDiaDaSemana(request.diaDaSemana());
+        horario.setHoraInicio(request.horaInicio());
+        horario.setHoraFim(request.horaFim());
+        horario.setDisciplinaTurma(disciplinaTurma);
+        horario.setCargaHoraria(cargaHoraria);
+        return horario;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "diaDaSemana", source = "request.diaDaSemana")
-    @Mapping(target = "horaInicio", source = "request.horaInicio")
-    @Mapping(target = "horaFim", source = "request.horaFim")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    @Mapping(target = "cargaHoraria", source = "cargaHoraria")
-    Horario toEntity(HorarioRequest request, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "diaDaSemana", source = "request.diaDaSemana")
-    @Mapping(target = "horaInicio", source = "request.horaInicio")
-    @Mapping(target = "horaFim", source = "request.horaFim")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    @Mapping(target = "cargaHoraria", source = "cargaHoraria")
-    void updateEntityFromRequest(HorarioRequest request, @MappingTarget Horario horario, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria);
+    public void updateEntityFromRequest(HorarioRequest request, Horario horario, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria) {
+        horario.setDiaDaSemana(request.diaDaSemana());
+        horario.setHoraInicio(request.horaInicio());
+        horario.setHoraFim(request.horaFim());
+        horario.setDisciplinaTurma(disciplinaTurma);
+        horario.setCargaHoraria(cargaHoraria);
+    }
 }

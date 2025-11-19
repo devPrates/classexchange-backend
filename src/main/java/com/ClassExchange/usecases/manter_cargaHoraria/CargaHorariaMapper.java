@@ -1,10 +1,19 @@
 package com.ClassExchange.usecases.manter_cargaHoraria;
 
 import com.ClassExchange.domain.entity.CargaHoraria;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface CargaHorariaMapper {
-    CargaHorariaResponse toResponse(CargaHoraria cargaHoraria);
+@Component
+public class CargaHorariaMapper {
+    public CargaHorariaResponse toResponse(CargaHoraria cargaHoraria) {
+        return new CargaHorariaResponse(
+                cargaHoraria.getId(),
+                cargaHoraria.getNome(),
+                cargaHoraria.getDuracao(),
+                cargaHoraria.getMedidaTempo(),
+                cargaHoraria.getCreatedAt(),
+                cargaHoraria.getUpdatedAt()
+        );
+    }
 }
 

@@ -1,11 +1,9 @@
 package com.ClassExchange.usecases.manter_periodos;
 
-import com.ClassExchange.domain.entity.Disciplina;
 import com.ClassExchange.domain.entity.Periodo;
 import com.ClassExchange.domain.entity.Turma;
 import com.ClassExchange.exception.BusinessException;
 import com.ClassExchange.exception.NotFoundException;
-import com.ClassExchange.usecases.manter_disciplinas.DisciplinaRepository;
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
 import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,6 @@ import java.util.UUID;
 public class PeriodoService {
 
     private final PeriodoRepository periodoRepository;
-    private final DisciplinaRepository disciplinaRepository;
     private final TurmaRepository turmaRepository;
     private final PeriodoMapper mapper;
 
@@ -30,13 +27,10 @@ public class PeriodoService {
     public PeriodoResponse criar(PeriodoRequest request) {
         validarDatas(request.inicio(), request.fim());
         
-        Disciplina disciplina = disciplinaRepository.findById(request.disciplinaId())
-                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada com ID: " + request.disciplinaId()));
-        
         Turma turma = turmaRepository.findById(request.turmaId())
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada com ID: " + request.turmaId()));
         
-        Periodo periodo = mapper.toEntity(request, disciplina, turma);
+        Periodo periodo = mapper.toEntity(request, turma);
         periodo.setSlug(SlugUtils.generateSlug(request.nome()));
         
         Periodo periodoSalvo = periodoRepository.save(periodo);
@@ -65,13 +59,10 @@ public class PeriodoService {
         Periodo periodo = periodoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Período não encontrado com ID: " + id));
         
-        Disciplina disciplina = disciplinaRepository.findById(request.disciplinaId())
-                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada com ID: " + request.disciplinaId()));
-        
         Turma turma = turmaRepository.findById(request.turmaId())
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada com ID: " + request.turmaId()));
         
-        mapper.updateEntityFromRequest(request, periodo, disciplina, turma);
+        mapper.updateEntityFromRequest(request, periodo, turma);
         periodo.setSlug(SlugUtils.generateSlug(request.nome()));
         
         Periodo periodoAtualizado = periodoRepository.save(periodo);

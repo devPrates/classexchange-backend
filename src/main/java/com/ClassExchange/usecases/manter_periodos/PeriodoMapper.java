@@ -1,47 +1,48 @@
 package com.ClassExchange.usecases.manter_periodos;
 
-import com.ClassExchange.domain.entity.Disciplina;
 import com.ClassExchange.domain.entity.Periodo;
 import com.ClassExchange.domain.entity.Turma;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface PeriodoMapper {
+@Component
+public class PeriodoMapper {
 
-    @Mapping(target = "disciplinaId", source = "periodo.disciplina.id")
-    @Mapping(target = "disciplinaNome", source = "periodo.disciplina.nome")
-    @Mapping(target = "turmaId", source = "periodo.turma.id")
-    @Mapping(target = "turmaNome", source = "periodo.turma.nome")
-    PeriodoResponse toResponse(Periodo periodo);
+    public PeriodoResponse toResponse(Periodo periodo) {
+        return new PeriodoResponse(
+                periodo.getId(),
+                periodo.getNome(),
+                periodo.getSlug(),
+                periodo.getTipoPeriodo(),
+                periodo.getNumero(),
+                periodo.getAno(),
+                periodo.getInicio(),
+                periodo.getFim(),
+                periodo.getTurma() != null ? periodo.getTurma().getId() : null,
+                periodo.getTurma() != null ? periodo.getTurma().getNome() : null,
+                periodo.getCreatedAt(),
+                periodo.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "tipoPeriodo", source = "request.tipoPeriodo")
-    @Mapping(target = "numero", source = "request.numero")
-    @Mapping(target = "ano", source = "request.ano")
-    @Mapping(target = "inicio", source = "request.inicio")
-    @Mapping(target = "fim", source = "request.fim")
-    @Mapping(target = "disciplina", source = "disciplina")
-    @Mapping(target = "turma", source = "turma")
-    Periodo toEntity(PeriodoRequest request, Disciplina disciplina, Turma turma);
+    public Periodo toEntity(PeriodoRequest request, Turma turma) {
+        Periodo periodo = new Periodo();
+        periodo.setNome(request.nome());
+        periodo.setTipoPeriodo(request.tipoPeriodo());
+        periodo.setNumero(request.numero());
+        periodo.setAno(request.ano());
+        periodo.setInicio(request.inicio());
+        periodo.setFim(request.fim());
+        periodo.setTurma(turma);
+        return periodo;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "tipoPeriodo", source = "request.tipoPeriodo")
-    @Mapping(target = "numero", source = "request.numero")
-    @Mapping(target = "ano", source = "request.ano")
-    @Mapping(target = "inicio", source = "request.inicio")
-    @Mapping(target = "fim", source = "request.fim")
-    @Mapping(target = "disciplina", source = "disciplina")
-    @Mapping(target = "turma", source = "turma")
-    void updateEntityFromRequest(PeriodoRequest request, @MappingTarget Periodo periodo, Disciplina disciplina, Turma turma);
+    public void updateEntityFromRequest(PeriodoRequest request, Periodo periodo, Turma turma) {
+        periodo.setNome(request.nome());
+        periodo.setTipoPeriodo(request.tipoPeriodo());
+        periodo.setNumero(request.numero());
+        periodo.setAno(request.ano());
+        periodo.setInicio(request.inicio());
+        periodo.setFim(request.fim());
+        periodo.setTurma(turma);
+    }
 }

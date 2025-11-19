@@ -1,31 +1,40 @@
 package com.ClassExchange.usecases.manter_usuarios;
 
 import com.ClassExchange.domain.entity.Usuario;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface UsuarioMapper {
+@Component
+public class UsuarioMapper {
 
-    @Mapping(target = "campusId", source = "usuario.campus.id")
-    @Mapping(target = "campusNome", source = "usuario.campus.nome")
-    UsuarioResponse toResponse(Usuario usuario);
+    public UsuarioResponse toResponse(Usuario usuario) {
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getCelular(),
+                usuario.getRole(),
+                usuario.getCampus() != null ? usuario.getCampus().getId() : null,
+                usuario.getCampus() != null ? usuario.getCampus().getNome() : null,
+                usuario.getCreatedAt(),
+                usuario.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "campus", ignore = true)
-    @Mapping(target = "professorCursos", ignore = true)
-    @Mapping(target = "professorDisciplinas", ignore = true)
-    Usuario toEntity(UsuarioRequest request);
+    public Usuario toEntity(UsuarioRequest request) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(request.nome());
+        usuario.setEmail(request.email());
+        usuario.setSenha(request.senha());
+        usuario.setCelular(request.celular());
+        usuario.setRole(request.role());
+        return usuario;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "campus", ignore = true)
-    @Mapping(target = "professorCursos", ignore = true)
-    @Mapping(target = "professorDisciplinas", ignore = true)
-    void updateEntityFromRequest(UsuarioRequest request, @MappingTarget Usuario usuario);
+    public void updateEntityFromRequest(UsuarioRequest request, Usuario usuario) {
+        usuario.setNome(request.nome());
+        usuario.setEmail(request.email());
+        usuario.setSenha(request.senha());
+        usuario.setCelular(request.celular());
+        usuario.setRole(request.role());
+    }
 }

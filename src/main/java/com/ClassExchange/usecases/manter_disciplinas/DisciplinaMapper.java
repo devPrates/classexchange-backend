@@ -2,39 +2,43 @@ package com.ClassExchange.usecases.manter_disciplinas;
 
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Disciplina;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.ClassExchange.domain.entity.Periodo;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface DisciplinaMapper {
+@Component
+public class DisciplinaMapper {
 
-    @Mapping(target = "cursoId", source = "disciplina.curso.id")
-    @Mapping(target = "cursoNome", source = "disciplina.curso.nome")
-    DisciplinaResponse toResponse(Disciplina disciplina);
+    public DisciplinaResponse toResponse(Disciplina disciplina) {
+        return new DisciplinaResponse(
+                disciplina.getId(),
+                disciplina.getNome(),
+                disciplina.getSlug(),
+                disciplina.getPeriodo() != null ? disciplina.getPeriodo().getNumero() : 0,
+                disciplina.getPeriodo() != null ? disciplina.getPeriodo().getId() : null,
+                disciplina.getCargaHoraria(),
+                disciplina.getEmenta(),
+                disciplina.getCurso() != null ? disciplina.getCurso().getId() : null,
+                disciplina.getCurso() != null ? disciplina.getCurso().getNome() : null,
+                disciplina.getCreatedAt(),
+                disciplina.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "periodos", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "periodo", source = "request.periodo")
-    @Mapping(target = "cargaHoraria", source = "request.cargaHoraria")
-    @Mapping(target = "ementa", source = "request.ementa")
-    @Mapping(target = "curso", source = "curso")
-    Disciplina toEntity(DisciplinaRequest request, Curso curso);
+    public Disciplina toEntity(DisciplinaRequest request, Curso curso, Periodo periodo) {
+        Disciplina disciplina = new Disciplina();
+        disciplina.setNome(request.nome());
+        disciplina.setCargaHoraria(request.cargaHoraria());
+        disciplina.setEmenta(request.ementa());
+        disciplina.setCurso(curso);
+        disciplina.setPeriodo(periodo);
+        return disciplina;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "periodos", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "periodo", source = "request.periodo")
-    @Mapping(target = "cargaHoraria", source = "request.cargaHoraria")
-    @Mapping(target = "ementa", source = "request.ementa")
-    @Mapping(target = "curso", source = "curso")
-    void updateEntityFromRequest(DisciplinaRequest request, @MappingTarget Disciplina disciplina, Curso curso);
+    public void updateEntityFromRequest(DisciplinaRequest request, Disciplina disciplina, Curso curso, Periodo periodo) {
+        disciplina.setNome(request.nome());
+        disciplina.setCargaHoraria(request.cargaHoraria());
+        disciplina.setEmenta(request.ementa());
+        disciplina.setCurso(curso);
+        disciplina.setPeriodo(periodo);
+    }
 }

@@ -15,8 +15,6 @@ public record PeriodoResponse(
         Integer ano,
         LocalDate inicio,
         LocalDate fim,
-        UUID disciplinaId,
-        String disciplinaNome,
         UUID turmaId,
         String turmaNome,
         LocalDateTime createdAt,

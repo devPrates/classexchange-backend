@@ -2,42 +2,99 @@ package com.ClassExchange.usecases.manter_campus;
 
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.Curso;
-import org.mapstruct.Mapper;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface CampusMapper {
-    @Mapping(target = "id", source = "campus.id")
-    @Mapping(target = "nome", source = "campus.nome")
-    @Mapping(target = "slug", source = "campus.slug")
-    
-    @NonNull CampusResponse toResponse(Campus campus);
+@Component
+public class CampusMapper {
+    @NonNull
+    public CampusResponse toResponse(Campus campus) {
+        return new CampusResponse(
+                campus.getId(),
+                campus.getNome(),
+                campus.getSigla(),
+                campus.getEmail(),
+                campus.getSlug(),
+                campus.getTelefone(),
+                campus.getEndereco(),
+                null,
+                null,
+                campus.getCreatedAt(),
+                campus.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "cursos", source = "cursos")
-    @NonNull CampusResponse toResponseWithCursos(Campus campus, List<CampusResponse.CursoSimplificado> cursos);
+    @NonNull
+    public CampusResponse toResponseWithCursosAndDiretor(Campus campus, List<CampusResponse.CursoSimplificado> cursos, CampusResponse.DiretorEnsinoSimplificado diretorDto) {
+        return new CampusResponse(
+                campus.getId(),
+                campus.getNome(),
+                campus.getSigla(),
+                campus.getEmail(),
+                campus.getSlug(),
+                campus.getTelefone(),
+                campus.getEndereco(),
+                diretorDto,
+                cursos,
+                campus.getCreatedAt(),
+                campus.getUpdatedAt()
+        );
+    }
 
-    @NonNull CampusResponse.CursoSimplificado toCursoSimplificado(Curso curso);
+    @NonNull
+    public CampusResponse.CursoSimplificado toCursoSimplificado(Curso curso) {
+        return new CampusResponse.CursoSimplificado(
+                curso.getId(),
+                curso.getNome(),
+                curso.getSigla(),
+                null
+        );
+    }
 
-    List<CampusResponse.CursoSimplificado> toCursoSimplificadoList(List<Curso> cursos);
+    @NonNull
+    public CampusResponse.CoordenadorCursoSimplificado toCoordenadorSimplificado(com.ClassExchange.domain.entity.CoordenadorCurso cc) {
+        return new CampusResponse.CoordenadorCursoSimplificado(
+                cc.getId(),
+                cc.getUsuario() != null ? cc.getUsuario().getId() : null,
+                cc.getUsuario() != null ? cc.getUsuario().getNome() : null,
+                cc.getUsuario() != null ? cc.getUsuario().getEmail() : null
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "slug", expression = "java(com.ClassExchange.utils.SlugUtils.generateSlug(request.nome()))")
-    @Mapping(target = "cursos", ignore = true)
-    @Mapping(target = "diretorEnsino", ignore = true)
-    @NonNull Campus toEntity(CampusRequest request);
+    @NonNull
+    public CampusResponse.DiretorEnsinoSimplificado toDiretorSimplificado(com.ClassExchange.domain.entity.DiretorEnsino de) {
+        return new CampusResponse.DiretorEnsinoSimplificado(
+                de.getId(),
+                de.getUsuario() != null ? de.getUsuario().getId() : null,
+                de.getUsuario() != null ? de.getUsuario().getNome() : null,
+                de.getUsuario() != null ? de.getUsuario().getEmail() : null
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "cursos", ignore = true)
-    @Mapping(target = "diretorEnsino", ignore = true)
-    @Mapping(target = "slug", expression = "java(com.ClassExchange.utils.SlugUtils.generateSlug(request.nome()))")
-    void updateEntityFromRequest(CampusRequest request, @MappingTarget Campus campus);
+    public List<CampusResponse.CursoSimplificado> toCursoSimplificadoList(List<Curso> cursos) {
+        return cursos.stream().map(this::toCursoSimplificado).toList();
+    }
+
+    @NonNull
+    public Campus toEntity(CampusRequest request) {
+        Campus campus = new Campus();
+        campus.setNome(request.nome());
+        campus.setSigla(request.sigla());
+        campus.setEmail(request.email());
+        campus.setTelefone(request.telefone());
+        campus.setEndereco(request.endereco());
+        campus.setSlug(com.ClassExchange.utils.SlugUtils.generateSlug(request.nome()));
+        return campus;
+    }
+
+    public void updateEntityFromRequest(CampusRequest request, Campus campus) {
+        campus.setNome(request.nome());
+        campus.setSigla(request.sigla());
+        campus.setEmail(request.email());
+        campus.setTelefone(request.telefone());
+        campus.setEndereco(request.endereco());
+        campus.setSlug(com.ClassExchange.utils.SlugUtils.generateSlug(request.nome()));
+    }
 }

@@ -1,16 +1,23 @@
 package com.ClassExchange.usecases.manter_coordenadorCurso;
 
 import com.ClassExchange.domain.entity.CoordenadorCurso;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface CoordenadorCursoMapper {
+@Component
+public class CoordenadorCursoMapper {
 
-    @Mapping(target = "usuarioId", source = "coordenadorCurso.usuario.id")
-    @Mapping(target = "usuarioNome", source = "coordenadorCurso.usuario.nome")
-    @Mapping(target = "cursoId", source = "coordenadorCurso.curso.id")
-    @Mapping(target = "cursoNome", source = "coordenadorCurso.curso.nome")
-    CoordenadorCursoResponse toResponse(CoordenadorCurso coordenadorCurso);
+    public CoordenadorCursoResponse toResponse(CoordenadorCurso coordenadorCurso) {
+        return new CoordenadorCursoResponse(
+                coordenadorCurso.getId(),
+                coordenadorCurso.getInicio(),
+                coordenadorCurso.getFim(),
+                coordenadorCurso.getUsuario() != null ? coordenadorCurso.getUsuario().getId() : null,
+                coordenadorCurso.getUsuario() != null ? coordenadorCurso.getUsuario().getNome() : null,
+                coordenadorCurso.getCurso() != null ? coordenadorCurso.getCurso().getId() : null,
+                coordenadorCurso.getCurso() != null ? coordenadorCurso.getCurso().getNome() : null,
+                coordenadorCurso.getCreatedAt(),
+                coordenadorCurso.getUpdatedAt()
+        );
+    }
 }
 

@@ -1,16 +1,23 @@
 package com.ClassExchange.usecases.manter_diretorEnsino;
 
 import com.ClassExchange.domain.entity.DiretorEnsino;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface DiretorEnsinoMapper {
+@Component
+public class DiretorEnsinoMapper {
 
-    @Mapping(target = "usuarioId", source = "diretorEnsino.usuario.id")
-    @Mapping(target = "usuarioNome", source = "diretorEnsino.usuario.nome")
-    @Mapping(target = "campusId", source = "diretorEnsino.campus.id")
-    @Mapping(target = "campusNome", source = "diretorEnsino.campus.nome")
-    DiretorEnsinoResponse toResponse(DiretorEnsino diretorEnsino);
+    public DiretorEnsinoResponse toResponse(DiretorEnsino diretorEnsino) {
+        return new DiretorEnsinoResponse(
+                diretorEnsino.getId(),
+                diretorEnsino.getInicio(),
+                diretorEnsino.getFim(),
+                diretorEnsino.getUsuario() != null ? diretorEnsino.getUsuario().getId() : null,
+                diretorEnsino.getUsuario() != null ? diretorEnsino.getUsuario().getNome() : null,
+                diretorEnsino.getCampus() != null ? diretorEnsino.getCampus().getId() : null,
+                diretorEnsino.getCampus() != null ? diretorEnsino.getCampus().getNome() : null,
+                diretorEnsino.getCreatedAt(),
+                diretorEnsino.getUpdatedAt()
+        );
+    }
 }
 

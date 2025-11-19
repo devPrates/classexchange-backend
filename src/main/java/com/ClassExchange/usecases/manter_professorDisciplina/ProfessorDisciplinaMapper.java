@@ -3,36 +3,39 @@ package com.ClassExchange.usecases.manter_professorDisciplina;
 import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.ProfessorDisciplina;
 import com.ClassExchange.domain.entity.Usuario;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface ProfessorDisciplinaMapper {
+@Component
+public class ProfessorDisciplinaMapper {
 
-    @Mapping(target = "usuarioId", source = "professorDisciplina.usuario.id")
-    @Mapping(target = "usuarioNome", source = "professorDisciplina.usuario.nome")
-    @Mapping(target = "disciplinaTurmaId", source = "professorDisciplina.disciplinaTurma.id")
-    @Mapping(target = "disciplinaNome", source = "professorDisciplina.disciplinaTurma.disciplina.nome")
-    @Mapping(target = "turmaNome", source = "professorDisciplina.disciplinaTurma.turma.nome")
-    ProfessorDisciplinaResponse toResponse(ProfessorDisciplina professorDisciplina);
+    public ProfessorDisciplinaResponse toResponse(ProfessorDisciplina professorDisciplina) {
+        return new ProfessorDisciplinaResponse(
+                professorDisciplina.getId(),
+                professorDisciplina.getInicio(),
+                professorDisciplina.getFim(),
+                professorDisciplina.getUsuario() != null ? professorDisciplina.getUsuario().getId() : null,
+                professorDisciplina.getUsuario() != null ? professorDisciplina.getUsuario().getNome() : null,
+                professorDisciplina.getDisciplinaTurma() != null ? professorDisciplina.getDisciplinaTurma().getId() : null,
+                professorDisciplina.getDisciplinaTurma() != null && professorDisciplina.getDisciplinaTurma().getDisciplina() != null ? professorDisciplina.getDisciplinaTurma().getDisciplina().getNome() : null,
+                professorDisciplina.getDisciplinaTurma() != null && professorDisciplina.getDisciplinaTurma().getTurma() != null ? professorDisciplina.getDisciplinaTurma().getTurma().getNome() : null,
+                professorDisciplina.getCreatedAt(),
+                professorDisciplina.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "inicio", source = "request.inicio")
-    @Mapping(target = "fim", source = "request.fim")
-    @Mapping(target = "usuario", source = "usuario")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    ProfessorDisciplina toEntity(ProfessorDisciplinaRequest request, Usuario usuario, DisciplinaTurma disciplinaTurma);
+    public ProfessorDisciplina toEntity(ProfessorDisciplinaRequest request, Usuario usuario, DisciplinaTurma disciplinaTurma) {
+        ProfessorDisciplina pd = new ProfessorDisciplina();
+        pd.setInicio(request.inicio());
+        pd.setFim(request.fim());
+        pd.setUsuario(usuario);
+        pd.setDisciplinaTurma(disciplinaTurma);
+        return pd;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "inicio", source = "request.inicio")
-    @Mapping(target = "fim", source = "request.fim")
-    @Mapping(target = "usuario", source = "usuario")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    void updateEntityFromRequest(ProfessorDisciplinaRequest request, @MappingTarget ProfessorDisciplina professorDisciplina, Usuario usuario, DisciplinaTurma disciplinaTurma);
+    public void updateEntityFromRequest(ProfessorDisciplinaRequest request, ProfessorDisciplina professorDisciplina, Usuario usuario, DisciplinaTurma disciplinaTurma) {
+        professorDisciplina.setInicio(request.inicio());
+        professorDisciplina.setFim(request.fim());
+        professorDisciplina.setUsuario(usuario);
+        professorDisciplina.setDisciplinaTurma(disciplinaTurma);
+    }
 }

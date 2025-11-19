@@ -3,32 +3,42 @@ package com.ClassExchange.usecases.manter_estudanteDisciplina;
 import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.Estudante;
 import com.ClassExchange.domain.entity.EstudanteDisciplina;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface EstudanteDisciplinaMapper {
+@Component
+public class EstudanteDisciplinaMapper {
 
-    @Mapping(target = "estudanteId", source = "estudanteDisciplina.estudante.id")
-    @Mapping(target = "estudanteNome", source = "estudanteDisciplina.estudante.nome")
-    @Mapping(target = "disciplinaTurmaId", source = "estudanteDisciplina.disciplinaTurma.id")
-    @Mapping(target = "disciplinaNome", source = "estudanteDisciplina.disciplinaTurma.disciplina.nome")
-    @Mapping(target = "turmaNome", source = "estudanteDisciplina.disciplinaTurma.turma.nome")
-    EstudanteDisciplinaResponse toResponse(EstudanteDisciplina estudanteDisciplina);
+    public EstudanteDisciplinaResponse toResponse(EstudanteDisciplina estudanteDisciplina) {
+        return new EstudanteDisciplinaResponse(
+                estudanteDisciplina.getId(),
+                estudanteDisciplina.getMatricula(),
+                estudanteDisciplina.getVinculoCurso(),
+                estudanteDisciplina.getSituacao(),
+                estudanteDisciplina.getEstudante() != null ? estudanteDisciplina.getEstudante().getId() : null,
+                estudanteDisciplina.getEstudante() != null ? estudanteDisciplina.getEstudante().getNome() : null,
+                estudanteDisciplina.getDisciplinaTurma() != null ? estudanteDisciplina.getDisciplinaTurma().getId() : null,
+                estudanteDisciplina.getDisciplinaTurma() != null && estudanteDisciplina.getDisciplinaTurma().getDisciplina() != null ? estudanteDisciplina.getDisciplinaTurma().getDisciplina().getNome() : null,
+                estudanteDisciplina.getDisciplinaTurma() != null && estudanteDisciplina.getDisciplinaTurma().getTurma() != null ? estudanteDisciplina.getDisciplinaTurma().getTurma().getNome() : null,
+                estudanteDisciplina.getCreatedAt(),
+                estudanteDisciplina.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "estudante", source = "estudante")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    EstudanteDisciplina toEntity(EstudanteDisciplinaRequest request, Estudante estudante, DisciplinaTurma disciplinaTurma);
+    public EstudanteDisciplina toEntity(EstudanteDisciplinaRequest request, Estudante estudante, DisciplinaTurma disciplinaTurma) {
+        EstudanteDisciplina ed = new EstudanteDisciplina();
+        ed.setMatricula(request.matricula());
+        ed.setVinculoCurso(request.vinculoCurso());
+        ed.setSituacao(request.situacao());
+        ed.setEstudante(estudante);
+        ed.setDisciplinaTurma(disciplinaTurma);
+        return ed;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "estudante", source = "estudante")
-    @Mapping(target = "disciplinaTurma", source = "disciplinaTurma")
-    void updateEntityFromRequest(EstudanteDisciplinaRequest request, @MappingTarget EstudanteDisciplina estudanteDisciplina, Estudante estudante, DisciplinaTurma disciplinaTurma);
+    public void updateEntityFromRequest(EstudanteDisciplinaRequest request, EstudanteDisciplina estudanteDisciplina, Estudante estudante, DisciplinaTurma disciplinaTurma) {
+        estudanteDisciplina.setMatricula(request.matricula());
+        estudanteDisciplina.setVinculoCurso(request.vinculoCurso());
+        estudanteDisciplina.setSituacao(request.situacao());
+        estudanteDisciplina.setEstudante(estudante);
+        estudanteDisciplina.setDisciplinaTurma(disciplinaTurma);
+    }
 }

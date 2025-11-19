@@ -3,29 +3,46 @@ package com.ClassExchange.usecases.manter_cursos;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Turma;
 import com.ClassExchange.domain.entity.CoordenadorCurso;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface CursoMapper {
+@Component
+public class CursoMapper {
 
-    @Mapping(target = "id", source = "curso.id")
-    @Mapping(target = "nome", source = "curso.nome")
-    @Mapping(target = "sigla", source = "curso.sigla")
-    @Mapping(target = "slug", source = "curso.slug")
-    @Mapping(target = "campusId", source = "curso.campus.id")
-    @Mapping(target = "campusNome", source = "curso.campus.nome")
-    @Mapping(target = "turmas", source = "turmas")
-    @Mapping(target = "coordenadorCurso", source = "coordenadorCurso")
-    CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso);
+    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso) {
+        return new CursoResponse(
+                curso.getId(),
+                curso.getNome(),
+                curso.getSigla(),
+                curso.getSlug(),
+                curso.getCampus() != null ? curso.getCampus().getId() : null,
+                curso.getCampus() != null ? curso.getCampus().getNome() : null,
+                turmas,
+                coordenadorCurso,
+                curso.getCreatedAt(),
+                curso.getUpdatedAt()
+        );
+    }
 
-    CursoResponse.TurmaSimplificada toTurmaSimplificada(Turma turma);
+    public CursoResponse.TurmaSimplificada toTurmaSimplificada(Turma turma) {
+        return new CursoResponse.TurmaSimplificada(
+                turma.getId(),
+                turma.getNome()
+        );
+    }
 
-    List<CursoResponse.TurmaSimplificada> toTurmaSimplificadaList(List<Turma> turmas);
+    public java.util.List<CursoResponse.TurmaSimplificada> toTurmaSimplificadaList(List<Turma> turmas) {
+        return turmas.stream().map(this::toTurmaSimplificada).toList();
+    }
 
-    @Mapping(target = "usuarioId", source = "usuario.id")
-    @Mapping(target = "usuarioNome", source = "usuario.nome")
-    CursoResponse.CoordenadorSimplificado toCoordenadorSimplificado(CoordenadorCurso coordenadorCurso);
+    public CursoResponse.CoordenadorSimplificado toCoordenadorSimplificado(CoordenadorCurso coordenadorCurso) {
+        return new CursoResponse.CoordenadorSimplificado(
+                coordenadorCurso.getId(),
+                coordenadorCurso.getUsuario() != null ? coordenadorCurso.getUsuario().getId() : null,
+                coordenadorCurso.getUsuario() != null ? coordenadorCurso.getUsuario().getNome() : null,
+                coordenadorCurso.getInicio(),
+                coordenadorCurso.getFim()
+        );
+    }
 }

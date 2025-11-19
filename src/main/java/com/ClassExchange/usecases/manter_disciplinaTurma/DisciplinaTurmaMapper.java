@@ -4,35 +4,36 @@ import com.ClassExchange.domain.entity.Disciplina;
 import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.Local;
 import com.ClassExchange.domain.entity.Turma;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface DisciplinaTurmaMapper {
+@Component
+public class DisciplinaTurmaMapper {
 
-    @Mapping(target = "disciplinaId", source = "disciplinaTurma.disciplina.id")
-    @Mapping(target = "disciplinaNome", source = "disciplinaTurma.disciplina.nome")
-    @Mapping(target = "turmaId", source = "disciplinaTurma.turma.id")
-    @Mapping(target = "turmaNome", source = "disciplinaTurma.turma.nome")
-    @Mapping(target = "localId", source = "disciplinaTurma.local.id")
-    @Mapping(target = "localNome", source = "disciplinaTurma.local.nome")
-    DisciplinaTurmaResponse toResponse(DisciplinaTurma disciplinaTurma);
+    public DisciplinaTurmaResponse toResponse(DisciplinaTurma disciplinaTurma) {
+        return new DisciplinaTurmaResponse(
+                disciplinaTurma.getId(),
+                disciplinaTurma.getDisciplina() != null ? disciplinaTurma.getDisciplina().getId() : null,
+                disciplinaTurma.getDisciplina() != null ? disciplinaTurma.getDisciplina().getNome() : null,
+                disciplinaTurma.getTurma() != null ? disciplinaTurma.getTurma().getId() : null,
+                disciplinaTurma.getTurma() != null ? disciplinaTurma.getTurma().getNome() : null,
+                disciplinaTurma.getLocal() != null ? disciplinaTurma.getLocal().getId() : null,
+                disciplinaTurma.getLocal() != null ? disciplinaTurma.getLocal().getNome() : null,
+                disciplinaTurma.getCreatedAt(),
+                disciplinaTurma.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "disciplina", source = "disciplina")
-    @Mapping(target = "turma", source = "turma")
-    @Mapping(target = "local", source = "local")
-    DisciplinaTurma toEntity(DisciplinaTurmaRequest request, Disciplina disciplina, Turma turma, Local local);
+    public DisciplinaTurma toEntity(DisciplinaTurmaRequest request, Disciplina disciplina, Turma turma, Local local) {
+        DisciplinaTurma dt = new DisciplinaTurma();
+        dt.setDisciplina(disciplina);
+        dt.setTurma(turma);
+        dt.setLocal(local);
+        return dt;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "disciplina", source = "disciplina")
-    @Mapping(target = "turma", source = "turma")
-    @Mapping(target = "local", source = "local")
-    void updateEntityFromRequest(DisciplinaTurmaRequest request, @MappingTarget DisciplinaTurma disciplinaTurma, Disciplina disciplina, Turma turma, Local local);
+    public void updateEntityFromRequest(DisciplinaTurmaRequest request, DisciplinaTurma disciplinaTurma, Disciplina disciplina, Turma turma, Local local) {
+        disciplinaTurma.setDisciplina(disciplina);
+        disciplinaTurma.setTurma(turma);
+        disciplinaTurma.setLocal(local);
+    }
 }

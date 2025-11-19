@@ -36,9 +36,8 @@ public class Periodo extends BaseEntity {
     @Column(nullable = false)
     private LocalDate fim;
 
-    @ManyToOne
-    @JoinColumn(name = "disciplina_id", nullable = false)
-    private Disciplina disciplina;
+    @OneToMany(mappedBy = "periodo")
+    private java.util.List<Disciplina> disciplinas;
 
     @ManyToOne
     @JoinColumn(name = "turma_id", nullable = false)

@@ -2,35 +2,35 @@ package com.ClassExchange.usecases.manter_turmas;
 
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Turma;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface TurmaMapper {
+@Component
+public class TurmaMapper {
 
-    @Mapping(target = "cursoId", source = "turma.curso.id")
-    @Mapping(target = "cursoNome", source = "turma.curso.nome")
-    TurmaResponse toResponse(Turma turma);
+    public TurmaResponse toResponse(Turma turma) {
+        return new TurmaResponse(
+                turma.getId(),
+                turma.getNome(),
+                turma.getSlug(),
+                turma.getNumero(),
+                turma.getCurso() != null ? turma.getCurso().getId() : null,
+                turma.getCurso() != null ? turma.getCurso().getNome() : null,
+                turma.getCreatedAt(),
+                turma.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "periodos", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "numero", source = "request.numero")
-    @Mapping(target = "curso", source = "curso")
-    Turma toEntity(TurmaRequest request, Curso curso);
+    public Turma toEntity(TurmaRequest request, Curso curso) {
+        Turma turma = new Turma();
+        turma.setNome(request.nome());
+        turma.setNumero(request.numero());
+        turma.setCurso(curso);
+        return turma;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "periodos", ignore = true)
-    @Mapping(target = "slug", ignore = true)
-    @Mapping(target = "nome", source = "request.nome")
-    @Mapping(target = "numero", source = "request.numero")
-    @Mapping(target = "curso", source = "curso")
-    void updateEntityFromRequest(TurmaRequest request, @MappingTarget Turma turma, Curso curso);
+    public void updateEntityFromRequest(TurmaRequest request, Turma turma, Curso curso) {
+        turma.setNome(request.nome());
+        turma.setNumero(request.numero());
+        turma.setCurso(curso);
+    }
 }

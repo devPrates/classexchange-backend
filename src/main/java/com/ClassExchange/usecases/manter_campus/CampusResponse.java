@@ -12,6 +12,7 @@ public record CampusResponse(
         String slug,
         String telefone,
         String endereco,
+        DiretorEnsinoSimplificado diretorEnsino,
         List<CursoSimplificado> cursos,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -19,6 +20,21 @@ public record CampusResponse(
     public record CursoSimplificado(
             UUID id,
             String nome,
-            String sigla
+            String sigla,
+            CoordenadorCursoSimplificado coordenador
+    ) {}
+
+    public record DiretorEnsinoSimplificado(
+            UUID id,
+            UUID usuarioId,
+            String usuarioNome,
+            String usuarioEmail
+    ) {}
+
+    public record CoordenadorCursoSimplificado(
+            UUID id,
+            UUID usuarioId,
+            String usuarioNome,
+            String usuarioEmail
     ) {}
 }

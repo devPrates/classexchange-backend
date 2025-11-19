@@ -23,18 +23,24 @@ INSERT INTO coordenador_curso (id, created_at, updated_at, inicio, fim, usuario_
 ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, DATE '2025-01-15', NULL, '66666666-6666-6666-6666-666666666666', '77777777-7777-7777-7777-777777777777'),
 ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, DATE '2025-01-15', NULL, '77777777-7777-7777-7777-777777777777', '88888888-8888-8888-8888-888888888888');
 
-INSERT INTO disciplina (id, created_at, updated_at, nome, slug, periodo, carga_horaria, ementa, curso_id) VALUES
-('cccccccc-cccc-cccc-cccc-cccccccccccc', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Programação I', 'programacao-i', 1, 80.0, 'Introdução à lógica e programação em Java.', '77777777-7777-7777-7777-777777777777'),
-('dddddddd-dddd-dddd-dddd-dddddddddddd', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Banco de Dados', 'banco-de-dados', 3, 80.0, 'Modelagem de dados, SQL e normalização.', '77777777-7777-7777-7777-777777777777'),
-('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Gestão de Pessoas', 'gestao-de-pessoas', 2, 60.0, 'Fundamentos de gestão de equipes e liderança.', '88888888-8888-8888-8888-888888888888'),
-('aaaa1111-2222-3333-4444-555566667777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cálculo I', 'calculo-i', 1, 90.0, 'Limites, derivadas e aplicações.', '99999999-9999-9999-9999-999999999999'),
-('bbbb1111-2222-3333-4444-555566667777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Estruturas de Dados', 'estruturas-de-dados', 2, 80.0, 'Listas, pilhas, filas, árvores e grafos.', '77777777-7777-7777-7777-777777777777');
-
 INSERT INTO turma (id, created_at, updated_at, nome, slug, numero, curso_id) VALUES
 ('ffffffff-ffff-ffff-ffff-ffffffffffff', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'SI-2025-A', 'si-2025-a', 1, '77777777-7777-7777-7777-777777777777'),
 ('00000000-0000-0000-0000-000000000000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'SI-2025-B', 'si-2025-b', 2, '77777777-7777-7777-7777-777777777777'),
 ('12121212-1212-1212-1212-121212121212', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ADM-2025-A', 'adm-2025-a', 1, '88888888-8888-8888-8888-888888888888'),
 ('32323232-3232-3232-3232-323232323232', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'MAT-2025-A', 'mat-2025-a', 1, '99999999-9999-9999-9999-999999999999');
+
+INSERT INTO periodo (id, created_at, updated_at, nome, slug, tipo_periodo, numero, ano, inicio, fim, turma_id) VALUES
+('13131313-1313-1313-1313-131313131313', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - SI A', 'sem-1-2025-si-a', 'SEMESTRAL', 1, 2025, DATE '2025-02-10', DATE '2025-07-10', 'ffffffff-ffff-ffff-ffff-ffffffffffff'),
+('14141414-1414-1414-1414-141414141415', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - SI B', 'sem-1-2025-si-b', 'SEMESTRAL', 1, 2025, DATE '2025-02-10', DATE '2025-07-10', '00000000-0000-0000-0000-000000000000'),
+('15151515-1515-1515-1515-151515151516', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - ADM', 'sem-1-2025-adm', 'SEMESTRAL', 1, 2025, DATE '2025-03-01', DATE '2025-08-01', '12121212-1212-1212-1212-121212121212'),
+('16161616-1616-1616-1616-161616161617', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - MAT', 'sem-1-2025-mat', 'SEMESTRAL', 1, 2025, DATE '2025-02-15', DATE '2025-07-15', '32323232-3232-3232-3232-323232323232');
+
+INSERT INTO disciplina (id, created_at, updated_at, nome, slug, carga_horaria, ementa, curso_id, periodo_id) VALUES
+('cccccccc-cccc-cccc-cccc-cccccccccccc', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Programação I', 'programacao-i', 80.0, 'Introdução à lógica e programação em Java.', '77777777-7777-7777-7777-777777777777', '13131313-1313-1313-1313-131313131313'),
+('dddddddd-dddd-dddd-dddd-dddddddddddd', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Banco de Dados', 'banco-de-dados', 80.0, 'Modelagem de dados, SQL e normalização.', '77777777-7777-7777-7777-777777777777', '14141414-1414-1414-1414-141414141415'),
+('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Gestão de Pessoas', 'gestao-de-pessoas', 60.0, 'Fundamentos de gestão de equipes e liderança.', '88888888-8888-8888-8888-888888888888', '15151515-1515-1515-1515-151515151516'),
+('aaaa1111-2222-3333-4444-555566667777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cálculo I', 'calculo-i', 90.0, 'Limites, derivadas e aplicações.', '99999999-9999-9999-9999-999999999999', '16161616-1616-1616-1616-161616161617'),
+('bbbb1111-2222-3333-4444-555566667777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Estruturas de Dados', 'estruturas-de-dados', 80.0, 'Listas, pilhas, filas, árvores e grafos.', '77777777-7777-7777-7777-777777777777', '13131313-1313-1313-1313-131313131313');
 
 INSERT INTO local (id, created_at, updated_at, nome) VALUES
 ('16161616-1616-1616-1616-161616161616', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Laboratório 101'),
@@ -47,12 +53,6 @@ INSERT INTO disciplina_turma (id, created_at, updated_at, disciplina_id, turma_i
 ('aa000003-0003-0003-0003-000300030003', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '12121212-1212-1212-1212-121212121212', '18181818-1818-1818-1818-181818181818'),
 ('aa000004-0004-0004-0004-000400040004', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'aaaa1111-2222-3333-4444-555566667777', '32323232-3232-3232-3232-323232323232', '17171717-1717-1717-1717-171717171717'),
 ('aa000005-0005-0005-0005-000500050005', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bbbb1111-2222-3333-4444-555566667777', 'ffffffff-ffff-ffff-ffff-ffffffffffff', '16161616-1616-1616-1616-161616161616');
-
-INSERT INTO periodo (id, created_at, updated_at, nome, slug, tipo_periodo, numero, ano, inicio, fim, disciplina_id, turma_id) VALUES
-('13131313-1313-1313-1313-131313131313', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - SI A', 'sem-1-2025-si-a', 'SEMESTRAL', 1, 2025, DATE '2025-02-10', DATE '2025-07-10', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 'ffffffff-ffff-ffff-ffff-ffffffffffff'),
-('14141414-1414-1414-1414-141414141415', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - SI B', 'sem-1-2025-si-b', 'SEMESTRAL', 1, 2025, DATE '2025-02-10', DATE '2025-07-10', 'dddddddd-dddd-dddd-dddd-dddddddddddd', '00000000-0000-0000-0000-000000000000'),
-('15151515-1515-1515-1515-151515151516', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - ADM', 'sem-1-2025-adm', 'SEMESTRAL', 1, 2025, DATE '2025-03-01', DATE '2025-08-01', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '12121212-1212-1212-1212-121212121212'),
-('16161616-1616-1616-1616-161616161617', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 1/2025 - MAT', 'sem-1-2025-mat', 'SEMESTRAL', 1, 2025, DATE '2025-02-15', DATE '2025-07-15', 'aaaa1111-2222-3333-4444-555566667777', '32323232-3232-3232-3232-323232323232');
 
 INSERT INTO carga_horaria (id, created_at, updated_at, nome, duracao, medida_tempo) VALUES
 ('bb000001-0001-0001-0001-000100010001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Aula Padrão', 60, 'MINUTOS'),

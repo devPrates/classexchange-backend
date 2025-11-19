@@ -3,31 +3,32 @@ package com.ClassExchange.usecases.manter_professorCurso;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.ProfessorCurso;
 import com.ClassExchange.domain.entity.Usuario;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
-public interface ProfessorCursoMapper {
+@Component
+public class ProfessorCursoMapper {
 
-    @Mapping(target = "usuarioId", source = "professorCurso.usuario.id")
-    @Mapping(target = "usuarioNome", source = "professorCurso.usuario.nome")
-    @Mapping(target = "cursoId", source = "professorCurso.curso.id")
-    @Mapping(target = "cursoNome", source = "professorCurso.curso.nome")
-    ProfessorCursoResponse toResponse(ProfessorCurso professorCurso);
+    public ProfessorCursoResponse toResponse(ProfessorCurso professorCurso) {
+        return new ProfessorCursoResponse(
+                professorCurso.getId(),
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getId() : null,
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getNome() : null,
+                professorCurso.getCurso() != null ? professorCurso.getCurso().getId() : null,
+                professorCurso.getCurso() != null ? professorCurso.getCurso().getNome() : null,
+                professorCurso.getCreatedAt(),
+                professorCurso.getUpdatedAt()
+        );
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "usuario", source = "usuario")
-    @Mapping(target = "curso", source = "curso")
-    ProfessorCurso toEntity(ProfessorCursoRequest request, Usuario usuario, Curso curso);
+    public ProfessorCurso toEntity(ProfessorCursoRequest request, Usuario usuario, Curso curso) {
+        ProfessorCurso pc = new ProfessorCurso();
+        pc.setUsuario(usuario);
+        pc.setCurso(curso);
+        return pc;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "usuario", source = "usuario")
-    @Mapping(target = "curso", source = "curso")
-    void updateEntityFromRequest(ProfessorCursoRequest request, @MappingTarget ProfessorCurso professorCurso, Usuario usuario, Curso curso);
+    public void updateEntityFromRequest(ProfessorCursoRequest request, ProfessorCurso professorCurso, Usuario usuario, Curso curso) {
+        professorCurso.setUsuario(usuario);
+        professorCurso.setCurso(curso);
+    }
 }
