@@ -36,17 +36,8 @@ public class PeriodoService {
         Turma turma = turmaRepository.findById(request.turmaId())
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada com ID: " + request.turmaId()));
         
-        Periodo periodo = Periodo.builder()
-                .nome(request.nome())
-                .slug(SlugUtils.generateSlug(request.nome()))
-                .tipoPeriodo(request.tipoPeriodo())
-                .numero(request.numero())
-                .ano(request.ano())
-                .inicio(request.inicio())
-                .fim(request.fim())
-                .disciplina(disciplina)
-                .turma(turma)
-                .build();
+        Periodo periodo = mapper.toEntity(request, disciplina, turma);
+        periodo.setSlug(SlugUtils.generateSlug(request.nome()));
         
         Periodo periodoSalvo = periodoRepository.save(periodo);
         return toResponse(periodoSalvo);
@@ -80,15 +71,8 @@ public class PeriodoService {
         Turma turma = turmaRepository.findById(request.turmaId())
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada com ID: " + request.turmaId()));
         
-        periodo.setNome(request.nome());
+        mapper.updateEntityFromRequest(request, periodo, disciplina, turma);
         periodo.setSlug(SlugUtils.generateSlug(request.nome()));
-        periodo.setTipoPeriodo(request.tipoPeriodo());
-        periodo.setNumero(request.numero());
-        periodo.setAno(request.ano());
-        periodo.setInicio(request.inicio());
-        periodo.setFim(request.fim());
-        periodo.setDisciplina(disciplina);
-        periodo.setTurma(turma);
         
         Periodo periodoAtualizado = periodoRepository.save(periodo);
         return toResponse(periodoAtualizado);

@@ -24,13 +24,8 @@ public class DisciplinaService {
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
-        Disciplina disciplina = Disciplina.builder()
-                .nome(request.nome())
-                .slug(SlugUtils.generateSlug(request.nome()))
-                .cargaHoraria(request.cargaHoraria())
-                .ementa(request.ementa())
-                .curso(curso)
-                .build();
+        Disciplina disciplina = mapper.toEntity(request, curso);
+        disciplina.setSlug(SlugUtils.generateSlug(request.nome()));
 
         return toResponse(repository.save(disciplina));
     }
@@ -53,11 +48,8 @@ public class DisciplinaService {
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
-        disciplina.setNome(request.nome());
+        mapper.updateEntityFromRequest(request, disciplina, curso);
         disciplina.setSlug(SlugUtils.generateSlug(request.nome()));
-        disciplina.setCargaHoraria(request.cargaHoraria());
-        disciplina.setEmenta(request.ementa());
-        disciplina.setCurso(curso);
 
         return toResponse(repository.save(disciplina));
     }

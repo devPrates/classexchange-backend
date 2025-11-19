@@ -2,9 +2,9 @@ package com.ClassExchange.usecases.manter_diretorEnsino;
 
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.DiretorEnsino;
-import com.ClassExchange.domain.entity.Professor;
+import com.ClassExchange.domain.entity.Usuario;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
-import com.ClassExchange.usecases.manter_professores.ProfessorRepository;
+import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class DiretorEnsinoService {
     private DiretorEnsinoRepository diretorEnsinoRepository;
 
     @Autowired
-    private ProfessorRepository professorRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private CampusRepository campusRepository;
@@ -29,8 +29,8 @@ public class DiretorEnsinoService {
     private DiretorEnsinoMapper mapper;
 
     public DiretorEnsinoResponse criar(DiretorEnsinoRequest request) {
-        Professor professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + request.usuarioId()));
 
         Campus campus = campusRepository.findById(request.campusId())
                 .orElseThrow(() -> new RuntimeException("Campus não encontrado com ID: " + request.campusId()));
@@ -38,7 +38,7 @@ public class DiretorEnsinoService {
         DiretorEnsino diretorEnsino = DiretorEnsino.builder()
                 .inicio(request.inicio())
                 .fim(request.fim())
-                .professor(professor)
+                .usuario(usuario)
                 .campus(campus)
                 .build();
 
@@ -64,15 +64,15 @@ public class DiretorEnsinoService {
         DiretorEnsino diretorEnsino = diretorEnsinoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("DiretorEnsino não encontrado com ID: " + id));
 
-        Professor professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + request.usuarioId()));
 
         Campus campus = campusRepository.findById(request.campusId())
                 .orElseThrow(() -> new RuntimeException("Campus não encontrado com ID: " + request.campusId()));
 
         diretorEnsino.setInicio(request.inicio());
         diretorEnsino.setFim(request.fim());
-        diretorEnsino.setProfessor(professor);
+        diretorEnsino.setUsuario(usuario);
         diretorEnsino.setCampus(campus);
 
         DiretorEnsino diretorEnsinoAtualizado = diretorEnsinoRepository.save(diretorEnsino);

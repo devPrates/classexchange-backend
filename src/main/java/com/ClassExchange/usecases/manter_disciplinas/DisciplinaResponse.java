@@ -7,6 +7,7 @@ public record DisciplinaResponse(
         UUID id,
         String nome,
         String slug,
+        int periodo,
         Double cargaHoraria,
         String ementa,
         UUID cursoId,

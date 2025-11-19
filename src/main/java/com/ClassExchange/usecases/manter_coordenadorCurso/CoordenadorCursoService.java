@@ -2,9 +2,9 @@ package com.ClassExchange.usecases.manter_coordenadorCurso;
 
 import com.ClassExchange.domain.entity.CoordenadorCurso;
 import com.ClassExchange.domain.entity.Curso;
-import com.ClassExchange.domain.entity.Professor;
+import com.ClassExchange.domain.entity.Usuario;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
-import com.ClassExchange.usecases.manter_professores.ProfessorRepository;
+import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class CoordenadorCursoService {
     private CoordenadorCursoRepository coordenadorCursoRepository;
 
     @Autowired
-    private ProfessorRepository professorRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private CursoRepository cursoRepository;
@@ -29,8 +29,8 @@ public class CoordenadorCursoService {
     private CoordenadorCursoMapper mapper;
 
     public CoordenadorCursoResponse criar(CoordenadorCursoRequest request) {
-        Professor professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + request.usuarioId()));
 
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + request.cursoId()));
@@ -38,7 +38,7 @@ public class CoordenadorCursoService {
         CoordenadorCurso coordenadorCurso = CoordenadorCurso.builder()
                 .inicio(request.inicio())
                 .fim(request.fim())
-                .professor(professor)
+                .usuario(usuario)
                 .curso(curso)
                 .build();
 
@@ -64,15 +64,15 @@ public class CoordenadorCursoService {
         CoordenadorCurso coordenadorCurso = coordenadorCursoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("CoordenadorCurso não encontrado com ID: " + id));
 
-        Professor professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado com ID: " + request.professorId()));
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + request.usuarioId()));
 
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + request.cursoId()));
 
         coordenadorCurso.setInicio(request.inicio());
         coordenadorCurso.setFim(request.fim());
-        coordenadorCurso.setProfessor(professor);
+        coordenadorCurso.setUsuario(usuario);
         coordenadorCurso.setCurso(curso);
 
         CoordenadorCurso coordenadorCursoAtualizado = coordenadorCursoRepository.save(coordenadorCurso);

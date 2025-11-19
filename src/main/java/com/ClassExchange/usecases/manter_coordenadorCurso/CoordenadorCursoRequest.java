@@ -11,8 +11,8 @@ public record CoordenadorCursoRequest(
 
         LocalDate fim,
 
-        @NotNull(message = "ID do professor é obrigatório")
-        UUID professorId,
+        @NotNull(message = "ID do usuário é obrigatório")
+        UUID usuarioId,
 
         @NotNull(message = "ID do curso é obrigatório")
         UUID cursoId

@@ -24,12 +24,8 @@ public class TurmaService {
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
-        Turma turma = Turma.builder()
-                .nome(request.nome())
-                .slug(SlugUtils.generateSlug(request.nome()))
-                .numero(request.numero())
-                .curso(curso)
-                .build();
+        Turma turma = mapper.toEntity(request, curso);
+        turma.setSlug(SlugUtils.generateSlug(request.nome()));
 
         return toResponse(repository.save(turma));
     }
@@ -52,10 +48,8 @@ public class TurmaService {
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
-        turma.setNome(request.nome());
+        mapper.updateEntityFromRequest(request, turma, curso);
         turma.setSlug(SlugUtils.generateSlug(request.nome()));
-        turma.setNumero(request.numero());
-        turma.setCurso(curso);
 
         return toResponse(repository.save(turma));
     }

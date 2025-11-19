@@ -20,6 +20,6 @@ public class Estudante extends BaseEntity {
     private String email;
 
     @OneToMany(mappedBy = "estudante")
-    private List<EstudanteClasse> estudanteClasses;
+    private List<EstudanteDisciplina> estudanteDisciplinas;
 
 }

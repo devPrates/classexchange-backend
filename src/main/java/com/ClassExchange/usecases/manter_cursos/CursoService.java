@@ -4,7 +4,8 @@ import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
-import com.ClassExchange.usecases.manter_disciplinas.DisciplinaRepository;
+import com.ClassExchange.domain.entity.CoordenadorCurso;
+import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoRepository;
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
 import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class CursoService {
 
     private final CursoRepository repository;
     private final CampusRepository campusRepository;
-    private final DisciplinaRepository disciplinaRepository;
+    private final CoordenadorCursoRepository coordenadorCursoRepository;
     private final TurmaRepository turmaRepository;
     private final CursoMapper mapper;
 
@@ -77,16 +78,22 @@ public class CursoService {
     }
 
     private CursoResponse toResponse(Curso curso) {
-        List<CursoResponse.DisciplinaSimplificada> disciplinas = disciplinaRepository.findByCurso(curso)
-                .stream()
-                .map(mapper::toDisciplinaSimplificada)
-                .toList();
-
         List<CursoResponse.TurmaSimplificada> turmas = turmaRepository.findByCurso(curso)
                 .stream()
                 .map(mapper::toTurmaSimplificada)
                 .toList();
 
-        return mapper.toResponse(curso, disciplinas, turmas);
+        CursoResponse.CoordenadorSimplificado coordenador = coordenadorCursoRepository
+                .findByCurso(curso).stream()
+                .sorted((a,b) -> {
+                    java.time.LocalDate af = a.getFim() == null ? java.time.LocalDate.MAX : a.getFim();
+                    java.time.LocalDate bf = b.getFim() == null ? java.time.LocalDate.MAX : b.getFim();
+                    return bf.compareTo(af);
+                })
+                .findFirst()
+                .map(mapper::toCoordenadorSimplificado)
+                .orElse(null);
+
+        return mapper.toResponse(curso, turmas, coordenador);
     }
 }

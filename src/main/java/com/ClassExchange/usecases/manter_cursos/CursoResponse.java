@@ -11,19 +11,21 @@ public record CursoResponse(
         String slug,
         UUID campusId,
         String campusNome,
-        List<DisciplinaSimplificada> disciplinas,
         List<TurmaSimplificada> turmas,
+        CoordenadorSimplificado coordenadorCurso,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public record DisciplinaSimplificada(
-            UUID id,
-            String nome,
-            double cargaHoraria
-    ) {}
-
     public record TurmaSimplificada(
             UUID id,
             String nome
+    ) {}
+
+    public record CoordenadorSimplificado(
+            UUID id,
+            UUID usuarioId,
+            String usuarioNome,
+            java.time.LocalDate inicio,
+            java.time.LocalDate fim
     ) {}
 }

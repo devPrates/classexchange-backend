@@ -1,11 +1,11 @@
-package com.ClassExchange.usecases.manter_diretorEnsino;
+package com.ClassExchange.usecases.manter_professorDisciplina;
 
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record DiretorEnsinoRequest(
+public record ProfessorDisciplinaRequest(
         @NotNull(message = "Data de início é obrigatória")
         LocalDate inicio,
 
@@ -14,7 +14,6 @@ public record DiretorEnsinoRequest(
         @NotNull(message = "ID do usuário é obrigatório")
         UUID usuarioId,
 
-        @NotNull(message = "ID do campus é obrigatório")
-        UUID campusId
-) {
-}
+        @NotNull(message = "ID da disciplina/turma é obrigatório")
+        UUID disciplinaTurmaId
+) {}

@@ -1,18 +1,18 @@
-package com.ClassExchange.usecases.manter_coordenadorCurso;
+package com.ClassExchange.usecases.manter_professorDisciplina;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record CoordenadorCursoResponse(
+public record ProfessorDisciplinaResponse(
         UUID id,
         LocalDate inicio,
         LocalDate fim,
         UUID usuarioId,
         String usuarioNome,
-        UUID cursoId,
-        String cursoNome,
+        UUID disciplinaTurmaId,
+        String disciplinaNome,
+        String turmaNome,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {
-}
+) {}

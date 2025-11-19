@@ -20,15 +20,7 @@ public class CampusService {
     private final CampusMapper mapper;
 
     public CampusResponse criar(CampusRequest request) {
-        Campus campus = Campus.builder()
-                .nome(request.nome())
-                .sigla(request.sigla())
-                .email(request.email())
-                .slug(SlugUtils.generateSlug(request.nome()))
-                .telefone(request.telefone())
-                .endereco(request.endereco())
-                .build();
-
+        Campus campus = mapper.toEntity(request);
         return toResponse(repository.save(campus));
     }
 
@@ -52,13 +44,7 @@ public class CampusService {
         Campus campus = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
 
-        campus.setNome(request.nome());
-        campus.setSigla(request.sigla());
-        campus.setEmail(request.email());
-        campus.setSlug(SlugUtils.generateSlug(request.nome()));
-        campus.setTelefone(request.telefone());
-        campus.setEndereco(request.endereco());
-
+        mapper.updateEntityFromRequest(request, campus);
         return toResponse(repository.save(campus));
     }
 

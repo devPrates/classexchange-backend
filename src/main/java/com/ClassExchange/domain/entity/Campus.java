@@ -35,6 +35,6 @@ public class Campus extends BaseEntity {
     private List<Curso> cursos;
 
     @OneToMany(mappedBy = "campus")
-    private List<DiretorEnsino> diretorEnsinos;
+    private List<DiretorEnsino> diretorEnsino;
 
 }
