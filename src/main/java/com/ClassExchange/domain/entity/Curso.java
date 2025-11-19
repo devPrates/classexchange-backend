@@ -35,4 +35,7 @@ public class Curso extends BaseEntity {
     @OneToMany(mappedBy = "curso")
     private List<CoordenadorCurso> coordenadorCursos;
 
+    @OneToMany(mappedBy = "curso")
+    private List<ProfessorCurso> professorCursos;
+
 }

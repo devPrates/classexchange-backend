@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EstudanteClasse extends BaseEntity {
+public class EstudanteDisciplina extends BaseEntity {
 
     @Column(nullable = false)
     private String matricula;
@@ -29,7 +29,6 @@ public class EstudanteClasse extends BaseEntity {
     private Estudante estudante;
 
     @ManyToOne
-    @JoinColumn(name = "classe_id", nullable = false)
-    private Classe classe;
-
+    @JoinColumn(name = "disciplina_turma_id", nullable = false)
+    private DisciplinaTurma disciplinaTurma;
 }

@@ -29,7 +29,4 @@ public class Turma extends BaseEntity {
     @OneToMany(mappedBy = "turma")
     private List<Periodo> periodos;
 
-    @OneToMany(mappedBy = "turma")
-    private List<Classe> classes;
-
 }

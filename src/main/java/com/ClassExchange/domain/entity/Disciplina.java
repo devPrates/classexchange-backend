@@ -19,6 +19,9 @@ public class Disciplina extends BaseEntity {
     @Column(nullable = false, unique = true, length = 100)
     private String slug;
 
+    @Column(nullable = false)
+    private int periodo;
+
     @Column(nullable = true)
     private Double cargaHoraria;
 
@@ -31,8 +34,5 @@ public class Disciplina extends BaseEntity {
 
     @OneToMany(mappedBy = "disciplina")
     private List<Periodo> periodos;
-
-    @OneToMany(mappedBy = "disciplina")
-    private List<Classe> classes;
 
 }

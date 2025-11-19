@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProfessorClasse extends BaseEntity {
+public class ProfessorDisciplina extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate inicio;
@@ -20,11 +20,10 @@ public class ProfessorClasse extends BaseEntity {
     private LocalDate fim;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "classe_id", nullable = false)
-    private Classe classe;
-
+    @JoinColumn(name = "disciplina_turma_id", nullable = false)
+    private DisciplinaTurma disciplinaTurma;
 }

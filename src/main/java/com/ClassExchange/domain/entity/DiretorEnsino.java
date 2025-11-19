@@ -20,8 +20,8 @@ public class DiretorEnsino extends BaseEntity {
     private LocalDate fim;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)

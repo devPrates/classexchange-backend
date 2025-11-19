@@ -3,21 +3,13 @@ package com.ClassExchange.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CoordenadorCurso extends BaseEntity {
-
-    @Column(nullable = false)
-    private LocalDate inicio;
-
-    @Column
-    private LocalDate fim;
+public class ProfessorCurso extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -26,5 +18,4 @@ public class CoordenadorCurso extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
-
 }

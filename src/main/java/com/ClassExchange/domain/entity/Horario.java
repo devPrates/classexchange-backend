@@ -21,7 +21,11 @@ public class Horario extends BaseEntity {
     private String horaFim;
 
     @ManyToOne
-    @JoinColumn(name = "classe_id", nullable = false)
-    private Classe classe;
+    @JoinColumn(name = "disciplina_turma_id", nullable = false)
+    private DisciplinaTurma disciplinaTurma;
+
+    @ManyToOne
+    @JoinColumn(name = "carga_horaria_id", nullable = false)
+    private CargaHoraria cargaHoraria;
 
 }

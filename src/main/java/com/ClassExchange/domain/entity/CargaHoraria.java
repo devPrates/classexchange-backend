@@ -25,6 +25,6 @@ public class CargaHoraria extends BaseEntity {
     private MedidaTempo medidaTempo;
 
     @OneToMany(mappedBy = "cargaHoraria")
-    private List<Classe> classes;
+    private List<Horario> horarios;
 
 }
