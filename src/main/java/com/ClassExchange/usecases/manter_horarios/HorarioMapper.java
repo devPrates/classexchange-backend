@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
 public interface HorarioMapper {
 
+
     @Mapping(target = "disciplinaTurmaId", source = "horario.disciplinaTurma.id")
     @Mapping(target = "disciplinaNome", source = "horario.disciplinaTurma.disciplina.nome")
     @Mapping(target = "turmaNome", source = "horario.disciplinaTurma.turma.nome")

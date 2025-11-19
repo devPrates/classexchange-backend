@@ -4,7 +4,6 @@ import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
-import com.ClassExchange.domain.entity.CoordenadorCurso;
 import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoRepository;
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
 import com.ClassExchange.utils.SlugUtils;
