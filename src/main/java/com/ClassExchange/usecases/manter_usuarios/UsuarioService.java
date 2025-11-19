@@ -1,6 +1,8 @@
 package com.ClassExchange.usecases.manter_usuarios;
 
 import com.ClassExchange.domain.entity.Usuario;
+import com.ClassExchange.domain.entity.Campus;
+import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import com.ClassExchange.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,14 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final CampusRepository campusRepository;
     private final UsuarioMapper mapper;
 
     public UsuarioResponse criar(UsuarioRequest request) {
         Usuario usuario = mapper.toEntity(request);
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
+        usuario.setCampus(campus);
         return toResponse(repository.save(usuario));
     }
 
@@ -37,6 +43,9 @@ public class UsuarioService {
                 .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
 
         mapper.updateEntityFromRequest(request, usuario);
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
+        usuario.setCampus(campus);
         return toResponse(repository.save(usuario));
     }
 

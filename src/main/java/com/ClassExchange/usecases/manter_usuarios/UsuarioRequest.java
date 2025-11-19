@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.UUID;
 
 public record UsuarioRequest(
         @NotBlank(message = "Nome é obrigatório")
@@ -25,5 +26,8 @@ public record UsuarioRequest(
         String celular,
 
         @NotNull(message = "Role é obrigatória")
-        RoleUsuario role
+        RoleUsuario role,
+
+        @NotNull(message = "Campus é obrigatório")
+        UUID campusId
 ) {}

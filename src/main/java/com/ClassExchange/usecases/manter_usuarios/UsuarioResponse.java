@@ -10,6 +10,8 @@ public record UsuarioResponse(
         String email,
         String celular,
         RoleUsuario role,
+        UUID campusId,
+        String campusNome,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

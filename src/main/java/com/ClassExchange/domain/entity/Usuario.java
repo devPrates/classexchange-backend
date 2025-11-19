@@ -4,6 +4,8 @@ import com.ClassExchange.domain.enums.RoleUsuario;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,4 +29,14 @@ public class Usuario extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleUsuario role;
+
+    @ManyToOne
+    @JoinColumn(name = "campus_id", nullable = false)
+    private Campus campus;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<ProfessorCurso> professorCursos;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<ProfessorDisciplina> professorDisciplinas;
 }
