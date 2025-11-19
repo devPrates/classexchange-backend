@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class CampusController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "409", description = "Campus já existe")
     })
-    public CampusResponse criar(@Valid @RequestBody CampusRequest request) {
+    public CampusResponse criar(@NonNull @Valid @RequestBody CampusRequest request) {
         return service.criar(request);
     }
 
@@ -49,7 +50,7 @@ public class CampusController {
     })
     public CampusResponse buscarPorId(
             @Parameter(description = "ID do campus", required = true)
-            @PathVariable UUID id) {
+            @NonNull @PathVariable UUID id) {
         return service.buscarPorId(id)
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
     }
@@ -62,7 +63,7 @@ public class CampusController {
     })
     public CampusResponse buscarPorSlug(
             @Parameter(description = "Slug do campus", required = true)
-            @PathVariable String slug) {
+            @NonNull @PathVariable String slug) {
         return service.buscarPorSlug(slug)
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
     }
@@ -76,8 +77,8 @@ public class CampusController {
     })
     public CampusResponse atualizar(
             @Parameter(description = "ID do campus", required = true)
-            @PathVariable UUID id, 
-            @Valid @RequestBody CampusRequest request) {
+            @NonNull @PathVariable UUID id, 
+            @NonNull @Valid @RequestBody CampusRequest request) {
         return service.atualizar(id, request);
     }
 
@@ -90,7 +91,7 @@ public class CampusController {
     })
     public void deletar(
             @Parameter(description = "ID do campus", required = true)
-            @PathVariable UUID id) {
+            @NonNull @PathVariable UUID id) {
         service.deletar(id);
     }
 }

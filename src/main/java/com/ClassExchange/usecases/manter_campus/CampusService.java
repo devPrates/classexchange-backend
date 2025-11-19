@@ -3,9 +3,9 @@ package com.ClassExchange.usecases.manter_campus;
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
-import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class CampusService {
     private final CursoRepository cursoRepository;
     private final CampusMapper mapper;
 
-    public CampusResponse criar(CampusRequest request) {
+    public CampusResponse criar(@NonNull CampusRequest request) {
         Campus campus = mapper.toEntity(request);
         return toResponse(repository.save(campus));
     }
@@ -30,25 +30,25 @@ public class CampusService {
                 .toList();
     }
 
-    public Optional<CampusResponse> buscarPorId(UUID id) {
+    public Optional<CampusResponse> buscarPorId(@NonNull UUID id) {
         return repository.findById(id)
                 .map(this::toResponse);
     }
 
-    public Optional<CampusResponse> buscarPorSlug(String slug) {
+    public Optional<CampusResponse> buscarPorSlug(@NonNull String slug) {
         return repository.findBySlug(slug)
                 .map(this::toResponse);
     }
 
-    public CampusResponse atualizar(UUID id, CampusRequest request) {
+    public CampusResponse atualizar(@NonNull UUID id, @NonNull CampusRequest request) {
         Campus campus = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
 
         mapper.updateEntityFromRequest(request, campus);
-        return toResponse(repository.save(campus));
+        return toResponse(repository.save(java.util.Objects.requireNonNull(campus)));
     }
 
-    public void deletar(UUID id) {
+    public void deletar(@NonNull UUID id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("Campus não encontrado");
         }
@@ -63,4 +63,6 @@ public class CampusService {
 
         return mapper.toResponseWithCursos(campus, cursos);
     }
+
+    
 }
