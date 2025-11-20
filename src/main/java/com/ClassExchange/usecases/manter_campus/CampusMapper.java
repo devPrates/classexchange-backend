@@ -2,6 +2,7 @@ package com.ClassExchange.usecases.manter_campus;
 
 import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.domain.entity.Curso;
+import com.ClassExchange.domain.entity.Usuario;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +22,14 @@ public class CampusMapper {
                 campus.getEndereco(),
                 null,
                 null,
+                0L,
                 campus.getCreatedAt(),
                 campus.getUpdatedAt()
         );
     }
 
     @NonNull
-    public CampusResponse toResponseWithCursosAndDiretor(Campus campus, List<CampusResponse.CursoSimplificado> cursos, CampusResponse.DiretorEnsinoSimplificado diretorDto) {
+    public CampusResponse toResponseWithCursosAndDiretor(Campus campus, List<CampusResponse.CursoSimplificado> cursos, CampusResponse.DiretorEnsinoSimplificado diretorDto, long usuariosCount) {
         return new CampusResponse(
                 campus.getId(),
                 campus.getNome(),
@@ -38,6 +40,7 @@ public class CampusMapper {
                 campus.getEndereco(),
                 diretorDto,
                 cursos,
+                usuariosCount,
                 campus.getCreatedAt(),
                 campus.getUpdatedAt()
         );
@@ -75,6 +78,17 @@ public class CampusMapper {
 
     public List<CampusResponse.CursoSimplificado> toCursoSimplificadoList(List<Curso> cursos) {
         return cursos.stream().map(this::toCursoSimplificado).toList();
+    }
+
+    @NonNull
+    public CampusResponse.UsuarioSimplificado toUsuarioSimplificado(Usuario usuario) {
+        return new CampusResponse.UsuarioSimplificado(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getCelular(),
+                usuario.getRole()
+        );
     }
 
     @NonNull

@@ -14,6 +14,7 @@ public record CampusResponse(
         String endereco,
         DiretorEnsinoSimplificado diretorEnsino,
         List<CursoSimplificado> cursos,
+        long usuariosCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -36,5 +37,13 @@ public record CampusResponse(
             UUID usuarioId,
             String usuarioNome,
             String usuarioEmail
+    ) {}
+
+    public record UsuarioSimplificado(
+            UUID id,
+            String nome,
+            String email,
+            String celular,
+            com.ClassExchange.domain.enums.RoleUsuario role
     ) {}
 }

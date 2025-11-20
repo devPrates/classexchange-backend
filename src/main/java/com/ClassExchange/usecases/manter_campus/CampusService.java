@@ -6,6 +6,9 @@ import com.ClassExchange.domain.entity.DiretorEnsino;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
 import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoRepository;
+import com.ClassExchange.usecases.manter_usuarios.UsuarioMapper;
+import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
+import com.ClassExchange.usecases.manter_usuarios.UsuarioResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.lang.NonNull;
@@ -22,6 +25,8 @@ public class CampusService {
     private final CampusRepository repository;
     private final CursoRepository cursoRepository;
     private final CoordenadorCursoRepository coordenadorCursoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
     private final CampusMapper mapper;
 
     public CampusResponse criar(@NonNull CampusRequest request) {
@@ -60,6 +65,16 @@ public class CampusService {
         repository.deleteById(id);
     }
 
+    public List<CampusResponse.UsuarioSimplificado> listarUsuariosDoCampus(@NonNull UUID campusId) {
+        if (!repository.existsById(campusId)) {
+            throw new NotFoundException("Campus não encontrado");
+        }
+        return usuarioRepository.findByCampusId(campusId)
+                .stream()
+                .map(mapper::toUsuarioSimplificado)
+                .toList();
+    }
+
     private CampusResponse toResponse(Campus campus) {
         List<CampusResponse.CursoSimplificado> cursos = cursoRepository.findByCampus(campus)
                 .stream()
@@ -88,7 +103,8 @@ public class CampusService {
                 .map(mapper::toDiretorSimplificado)
                 .orElse(null);
 
-        return mapper.toResponseWithCursosAndDiretor(campus, cursos, diretorDto);
+        long usuariosCount = usuarioRepository.countByCampusId(campus.getId());
+        return mapper.toResponseWithCursosAndDiretor(campus, cursos, diretorDto, usuariosCount);
     }
 
     

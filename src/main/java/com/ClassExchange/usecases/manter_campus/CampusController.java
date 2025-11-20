@@ -68,6 +68,18 @@ public class CampusController {
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
     }
 
+    @GetMapping("/{id}/usuarios")
+    @Operation(summary = "Listar usuários de um campus", description = "Retorna todos os usuários vinculados ao campus informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuários retornados com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Campus não encontrado")
+    })
+    public java.util.List<com.ClassExchange.usecases.manter_campus.CampusResponse.UsuarioSimplificado> listarUsuariosDoCampus(
+            @Parameter(description = "ID do campus", required = true)
+            @NonNull @PathVariable java.util.UUID id) {
+        return service.listarUsuariosDoCampus(id);
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar campus", description = "Atualiza os dados de um campus existente")
     @ApiResponses(value = {
