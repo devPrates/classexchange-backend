@@ -105,4 +105,16 @@ public class CursoController {
             @PathVariable java.util.UUID id) {
         return service.listarEstudantesDoCurso(id);
     }
+
+    @GetMapping("/{id}/periodos")
+    @Operation(summary = "Listar períodos do curso", description = "Retorna todos os períodos vinculados ao curso, com disciplinas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Períodos retornados com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Curso não encontrado")
+    })
+    public java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoCursoResponse> listarPeriodosDoCurso(
+            @Parameter(description = "ID do curso", required = true)
+            @PathVariable java.util.UUID id) {
+        return service.listarPeriodosDoCurso(id);
+    }
 }

@@ -12,4 +12,5 @@ import java.util.List;
 public interface PeriodoRepository extends JpaRepository<Periodo, UUID> {
     Optional<Periodo> findBySlug(String slug);
     List<Periodo> findByTurmaId(UUID turmaId);
+    List<Periodo> findByCursoId(UUID cursoId);
 }

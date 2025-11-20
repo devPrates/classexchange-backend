@@ -24,6 +24,8 @@ public class CursoService {
     private final CoordenadorCursoRepository coordenadorCursoRepository;
     private final TurmaRepository turmaRepository;
     private final EstudanteCursoRepository estudanteCursoRepository;
+    private final com.ClassExchange.usecases.manter_periodos.PeriodoRepository periodoRepository;
+    private final com.ClassExchange.usecases.manter_periodos.PeriodoMapper periodoMapper;
     private final CursoMapper mapper;
 
     public CursoResponse criar(CursoRequest request) {
@@ -104,6 +106,14 @@ public class CursoService {
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
         return estudanteCursoRepository.findByCursoId(curso.getId()).stream()
                 .map(mapper::toEstudanteSimplificado)
+                .toList();
+    }
+
+    public java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoCursoResponse> listarPeriodosDoCurso(java.util.UUID id) {
+        Curso curso = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
+        return periodoRepository.findByCursoId(curso.getId()).stream()
+                .map(periodoMapper::toCursoResponse)
                 .toList();
     }
 }

@@ -35,6 +35,32 @@ public class PeriodoMapper {
         );
     }
 
+    public PeriodoCursoResponse toCursoResponse(Periodo periodo) {
+        java.util.List<PeriodoCursoResponse.DisciplinaSimplificada> disciplinas = periodo.getDisciplinas() == null
+                ? java.util.List.of()
+                : periodo.getDisciplinas().stream()
+                .map(d -> new PeriodoCursoResponse.DisciplinaSimplificada(
+                        d.getId(),
+                        d.getNome(),
+                        d.getSlug()
+                ))
+                .toList();
+
+        return new PeriodoCursoResponse(
+                periodo.getId(),
+                periodo.getNome(),
+                periodo.getSlug(),
+                periodo.getTipoPeriodo(),
+                periodo.getNumero(),
+                periodo.getAno(),
+                periodo.getInicio(),
+                periodo.getFim(),
+                disciplinas,
+                periodo.getCreatedAt(),
+                periodo.getUpdatedAt()
+        );
+    }
+
     public Periodo toEntity(PeriodoRequest request, Turma turma) {
         Periodo periodo = new Periodo();
         periodo.setNome(request.nome());
@@ -44,6 +70,7 @@ public class PeriodoMapper {
         periodo.setInicio(request.inicio());
         periodo.setFim(request.fim());
         periodo.setTurma(turma);
+        periodo.setCurso(turma.getCurso());
         return periodo;
     }
 
@@ -55,5 +82,6 @@ public class PeriodoMapper {
         periodo.setInicio(request.inicio());
         periodo.setFim(request.fim());
         periodo.setTurma(turma);
+        periodo.setCurso(turma.getCurso());
     }
 }
