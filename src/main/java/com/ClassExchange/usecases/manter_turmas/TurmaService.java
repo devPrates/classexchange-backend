@@ -4,6 +4,9 @@ import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Turma;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
+import com.ClassExchange.usecases.manter_periodos.PeriodoRepository;
+import com.ClassExchange.usecases.manter_periodos.PeriodoMapper;
+import com.ClassExchange.usecases.manter_periodos.PeriodoResponse;
 import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ public class TurmaService {
     private final TurmaRepository repository;
     private final CursoRepository cursoRepository;
     private final TurmaMapper mapper;
+    private final PeriodoRepository periodoRepository;
+    private final PeriodoMapper periodoMapper;
 
     public TurmaResponse criar(TurmaRequest request) {
         Curso curso = cursoRepository.findById(request.cursoId())
@@ -68,5 +73,14 @@ public class TurmaService {
 
     private TurmaResponse toResponse(Turma turma) {
         return mapper.toResponse(turma);
+    }
+
+    public java.util.List<PeriodoResponse> listarPeriodosDaTurma(UUID turmaId) {
+        if (!repository.existsById(turmaId)) {
+            throw new NotFoundException("Turma não encontrada");
+        }
+        return periodoRepository.findByTurmaId(turmaId).stream()
+                .map(periodoMapper::toResponse)
+                .toList();
     }
 }

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface PeriodoRepository extends JpaRepository<Periodo, UUID> {
     Optional<Periodo> findBySlug(String slug);
+    List<Periodo> findByTurmaId(UUID turmaId);
 }

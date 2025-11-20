@@ -6,9 +6,7 @@ import com.ClassExchange.domain.entity.DiretorEnsino;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
 import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoRepository;
-import com.ClassExchange.usecases.manter_usuarios.UsuarioMapper;
 import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
-import com.ClassExchange.usecases.manter_usuarios.UsuarioResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.lang.NonNull;
@@ -26,7 +24,6 @@ public class CampusService {
     private final CursoRepository cursoRepository;
     private final CoordenadorCursoRepository coordenadorCursoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioMapper usuarioMapper;
     private final CampusMapper mapper;
 
     public CampusResponse criar(@NonNull CampusRequest request) {

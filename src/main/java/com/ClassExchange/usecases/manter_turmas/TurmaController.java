@@ -93,4 +93,16 @@ public class TurmaController {
             @PathVariable UUID id) {
         service.deletar(id);
     }
+
+    @GetMapping("/{id}/periodos")
+    @Operation(summary = "Listar períodos da turma", description = "Retorna os períodos vinculados à turma, incluindo lista de disciplinas por período")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Períodos retornados com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Turma não encontrada")
+    })
+    public java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoResponse> listarPeriodosDaTurma(
+            @Parameter(description = "ID da turma", required = true)
+            @PathVariable java.util.UUID id) {
+        return service.listarPeriodosDaTurma(id);
+    }
 }

@@ -8,6 +8,16 @@ import org.springframework.stereotype.Component;
 public class PeriodoMapper {
 
     public PeriodoResponse toResponse(Periodo periodo) {
+        java.util.List<PeriodoResponse.DisciplinaSimplificada> disciplinas = periodo.getDisciplinas() == null
+                ? java.util.List.of()
+                : periodo.getDisciplinas().stream()
+                .map(d -> new PeriodoResponse.DisciplinaSimplificada(
+                        d.getId(),
+                        d.getNome(),
+                        d.getSlug()
+                ))
+                .toList();
+
         return new PeriodoResponse(
                 periodo.getId(),
                 periodo.getNome(),
@@ -19,6 +29,7 @@ public class PeriodoMapper {
                 periodo.getFim(),
                 periodo.getTurma() != null ? periodo.getTurma().getId() : null,
                 periodo.getTurma() != null ? periodo.getTurma().getNome() : null,
+                disciplinas,
                 periodo.getCreatedAt(),
                 periodo.getUpdatedAt()
         );
