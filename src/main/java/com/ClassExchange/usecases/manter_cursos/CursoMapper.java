@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CursoMapper {
 
-    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso) {
+    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso, long studentsCount) {
         return new CursoResponse(
                 curso.getId(),
                 curso.getNome(),
@@ -20,6 +20,7 @@ public class CursoMapper {
                 curso.getCampus() != null ? curso.getCampus().getNome() : null,
                 turmas,
                 coordenadorCurso,
+                studentsCount,
                 curso.getCreatedAt(),
                 curso.getUpdatedAt()
         );
@@ -43,6 +44,18 @@ public class CursoMapper {
                 coordenadorCurso.getUsuario() != null ? coordenadorCurso.getUsuario().getNome() : null,
                 coordenadorCurso.getInicio(),
                 coordenadorCurso.getFim()
+        );
+    }
+
+    public com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado toEstudanteSimplificado(com.ClassExchange.domain.entity.EstudanteCurso estudanteCurso) {
+        com.ClassExchange.domain.entity.Estudante e = estudanteCurso.getEstudante();
+        return new com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado(
+                e != null ? e.getId() : null,
+                e != null ? e.getNome() : null,
+                e != null ? e.getEmail() : null,
+                estudanteCurso.getMatricula(),
+                estudanteCurso.getSituacao(),
+                estudanteCurso.getVinculoCurso()
         );
     }
 }

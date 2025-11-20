@@ -93,4 +93,16 @@ public class CursoController {
         return service.buscarPorSlug(slug)
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
     }
+
+    @GetMapping("/{id}/estudantes")
+    @Operation(summary = "Listar estudantes do curso", description = "Retorna todos os estudantes vinculados ao curso informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estudantes retornados com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Curso não encontrado")
+    })
+    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado> listarEstudantesDoCurso(
+            @Parameter(description = "ID do curso", required = true)
+            @PathVariable java.util.UUID id) {
+        return service.listarEstudantesDoCurso(id);
+    }
 }

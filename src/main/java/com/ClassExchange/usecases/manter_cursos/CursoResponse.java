@@ -13,6 +13,7 @@ public record CursoResponse(
         String campusNome,
         List<TurmaSimplificada> turmas,
         CoordenadorSimplificado coordenadorCurso,
+        long studentsCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -27,5 +28,14 @@ public record CursoResponse(
             String usuarioNome,
             java.time.LocalDate inicio,
             java.time.LocalDate fim
+    ) {}
+
+    public record EstudanteSimplificado(
+            UUID id,
+            String nome,
+            String email,
+            String matricula,
+            com.ClassExchange.domain.enums.SituacaoClasse situacao,
+            java.time.LocalDate vinculoCurso
     ) {}
 }

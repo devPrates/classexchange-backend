@@ -6,6 +6,7 @@ import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoRepository;
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
+import com.ClassExchange.usecases.manter_estudanteCurso.EstudanteCursoRepository;
 import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class CursoService {
     private final CampusRepository campusRepository;
     private final CoordenadorCursoRepository coordenadorCursoRepository;
     private final TurmaRepository turmaRepository;
+    private final EstudanteCursoRepository estudanteCursoRepository;
     private final CursoMapper mapper;
 
     public CursoResponse criar(CursoRequest request) {
@@ -93,6 +95,15 @@ public class CursoService {
                 .map(mapper::toCoordenadorSimplificado)
                 .orElse(null);
 
-        return mapper.toResponse(curso, turmas, coordenador);
+        long studentsCount = estudanteCursoRepository.countByCursoId(curso.getId());
+        return mapper.toResponse(curso, turmas, coordenador, studentsCount);
+    }
+
+    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado> listarEstudantesDoCurso(java.util.UUID id) {
+        Curso curso = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
+        return estudanteCursoRepository.findByCursoId(curso.getId()).stream()
+                .map(mapper::toEstudanteSimplificado)
+                .toList();
     }
 }
