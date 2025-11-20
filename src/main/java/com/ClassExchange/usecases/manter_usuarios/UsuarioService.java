@@ -20,6 +20,9 @@ public class UsuarioService {
     private final UsuarioMapper mapper;
 
     public UsuarioResponse criar(UsuarioRequest request) {
+        if (request.senha() == null || request.senha().isBlank()) {
+            throw new com.ClassExchange.exception.BusinessException("Senha é obrigatória na criação de usuário");
+        }
         Usuario usuario = mapper.toEntity(request);
         Campus campus = campusRepository.findById(request.campusId())
                 .orElseThrow(() -> new NotFoundException("Campus não encontrado"));

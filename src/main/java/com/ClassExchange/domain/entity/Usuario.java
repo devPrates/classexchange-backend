@@ -34,9 +34,9 @@ public class Usuario extends BaseEntity {
     @JoinColumn(name = "campus_id", nullable = false)
     private Campus campus;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProfessorCurso> professorCursos;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProfessorDisciplina> professorDisciplinas;
 }

@@ -3,6 +3,8 @@ package com.ClassExchange.domain.entity;
 import com.ClassExchange.domain.enums.SituacaoClasse;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -26,6 +28,7 @@ public class EstudanteCurso extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "estudante_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Estudante estudante;
 
     @ManyToOne
