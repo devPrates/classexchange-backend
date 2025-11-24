@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CursoMapper {
 
-    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso, long studentsCount) {
+    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, List<CursoResponse.ProfessorCursoSimplificado> professoresCurso, CursoResponse.CoordenadorSimplificado coordenadorCurso, long studentsCount) {
         return new CursoResponse(
                 curso.getId(),
                 curso.getNome(),
@@ -19,6 +19,7 @@ public class CursoMapper {
                 curso.getCampus() != null ? curso.getCampus().getId() : null,
                 curso.getCampus() != null ? curso.getCampus().getNome() : null,
                 turmas,
+                professoresCurso,
                 coordenadorCurso,
                 studentsCount,
                 curso.getCreatedAt(),
@@ -29,7 +30,8 @@ public class CursoMapper {
     public CursoResponse.TurmaSimplificada toTurmaSimplificada(Turma turma) {
         return new CursoResponse.TurmaSimplificada(
                 turma.getId(),
-                turma.getNome()
+                turma.getNome(),
+                turma.getNumero()
         );
     }
 
@@ -45,6 +47,19 @@ public class CursoMapper {
                 coordenadorCurso.getInicio(),
                 coordenadorCurso.getFim()
         );
+    }
+
+    public CursoResponse.ProfessorCursoSimplificado toProfessorCursoSimplificado(com.ClassExchange.domain.entity.ProfessorCurso professorCurso) {
+        return new CursoResponse.ProfessorCursoSimplificado(
+                professorCurso.getId(),
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getId() : null,
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getNome() : null,
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getEmail() : null
+        );
+    }
+
+    public java.util.List<CursoResponse.ProfessorCursoSimplificado> toProfessorCursoSimplificadoList(java.util.List<com.ClassExchange.domain.entity.ProfessorCurso> professoresCurso) {
+        return professoresCurso.stream().map(this::toProfessorCursoSimplificado).toList();
     }
 
     public com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado toEstudanteSimplificado(com.ClassExchange.domain.entity.EstudanteCurso estudanteCurso) {

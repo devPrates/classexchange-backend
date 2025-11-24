@@ -75,12 +75,13 @@ public class TurmaService {
         return mapper.toResponse(turma);
     }
 
-    public java.util.List<PeriodoResponse> listarPeriodosDaTurma(UUID turmaId) {
-        if (!repository.existsById(turmaId)) {
-            throw new NotFoundException("Turma não encontrada");
-        }
-        return periodoRepository.findByTurmaId(turmaId).stream()
-                .map(periodoMapper::toResponse)
-                .toList();
+    public java.util.Optional<TurmaComPeriodosResponse> buscarPorSlugComPeriodos(String slug) {
+        return repository.findBySlug(slug)
+                .map(t -> {
+                    java.util.List<PeriodoResponse> periodos = periodoRepository.findByTurmaId(t.getId()).stream()
+                            .map(periodoMapper::toResponse)
+                            .toList();
+                    return mapper.toResponseComPeriodos(t, periodos);
+                });
     }
 }

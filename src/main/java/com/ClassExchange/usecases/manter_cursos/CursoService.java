@@ -8,6 +8,7 @@ import com.ClassExchange.usecases.manter_coordenadorCurso.CoordenadorCursoReposi
 import com.ClassExchange.usecases.manter_turmas.TurmaRepository;
 import com.ClassExchange.usecases.manter_estudanteCurso.EstudanteCursoRepository;
 import com.ClassExchange.utils.SlugUtils;
+import com.ClassExchange.usecases.manter_professorCurso.ProfessorCursoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,7 @@ public class CursoService {
     private final CoordenadorCursoRepository coordenadorCursoRepository;
     private final TurmaRepository turmaRepository;
     private final EstudanteCursoRepository estudanteCursoRepository;
-    private final com.ClassExchange.usecases.manter_periodos.PeriodoRepository periodoRepository;
-    private final com.ClassExchange.usecases.manter_periodos.PeriodoMapper periodoMapper;
+    private final ProfessorCursoRepository professorCursoRepository;
     private final CursoMapper mapper;
 
     public CursoResponse criar(CursoRequest request) {
@@ -86,6 +86,11 @@ public class CursoService {
                 .map(mapper::toTurmaSimplificada)
                 .toList();
 
+        java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.ProfessorCursoSimplificado> professoresCurso = professorCursoRepository.findByCurso(curso)
+                .stream()
+                .map(mapper::toProfessorCursoSimplificado)
+                .toList();
+
         CursoResponse.CoordenadorSimplificado coordenador = coordenadorCursoRepository
                 .findByCurso(curso).stream()
                 .sorted((a,b) -> {
@@ -98,7 +103,7 @@ public class CursoService {
                 .orElse(null);
 
         long studentsCount = estudanteCursoRepository.countByCursoId(curso.getId());
-        return mapper.toResponse(curso, turmas, coordenador, studentsCount);
+        return mapper.toResponse(curso, turmas, professoresCurso, coordenador, studentsCount);
     }
 
     public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado> listarEstudantesDoCurso(java.util.UUID id) {
@@ -109,11 +114,4 @@ public class CursoService {
                 .toList();
     }
 
-    public java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoCursoResponse> listarPeriodosDoCurso(java.util.UUID id) {
-        Curso curso = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
-        return periodoRepository.findByCursoId(curso.getId()).stream()
-                .map(periodoMapper::toCursoResponse)
-                .toList();
-    }
 }

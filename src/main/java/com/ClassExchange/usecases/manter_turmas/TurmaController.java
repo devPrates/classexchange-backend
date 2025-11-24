@@ -42,15 +42,15 @@ public class TurmaController {
     }
 
     @GetMapping("/slug/{slug}")
-    @Operation(summary = "Buscar turma por slug", description = "Retorna uma turma específica pelo seu slug")
+    @Operation(summary = "Buscar turma por slug", description = "Retorna uma turma específica pelo seu slug com períodos e disciplinas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Turma encontrada"),
             @ApiResponse(responseCode = "404", description = "Turma não encontrada")
     })
-    public TurmaResponse buscarPorSlug(
+    public TurmaComPeriodosResponse buscarPorSlug(
             @Parameter(description = "Slug da turma", required = true)
             @PathVariable String slug) {
-        return service.buscarPorSlug(slug)
+        return service.buscarPorSlugComPeriodos(slug)
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada"));
     }
 
@@ -94,15 +94,7 @@ public class TurmaController {
         service.deletar(id);
     }
 
-    @GetMapping("/{id}/periodos")
-    @Operation(summary = "Listar períodos da turma", description = "Retorna os períodos vinculados à turma, incluindo lista de disciplinas por período")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Períodos retornados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Turma não encontrada")
-    })
-    public java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoResponse> listarPeriodosDaTurma(
-            @Parameter(description = "ID da turma", required = true)
-            @PathVariable java.util.UUID id) {
-        return service.listarPeriodosDaTurma(id);
-    }
+    
+
+    
 }

@@ -1,0 +1,155 @@
+@startuml
+
+class Campus {
+  id: uuid
+  nome: varchar
+  sigla: varchar(10)
+  email: varchar
+  slug: varchar(100)
+  telefone: varchar
+  endereco: varchar
+}
+
+class Usuario {
+  id: uuid
+  nome: varchar
+  email: varchar
+  senha: varchar
+  celular: varchar
+  role: RoleUsuario
+}
+
+class Curso {
+  id: uuid
+  nome: varchar
+  sigla: varchar(10)
+  slug: varchar(100)
+}
+
+class Disciplina {
+  id: uuid
+  nome: varchar
+  carga_horaria: double
+  ementa: text
+}
+
+class Turma {
+  id: uuid
+  nome: varchar
+  numero: int
+}
+
+class Periodo {
+  id: uuid
+  nome: varchar
+  tipo_periodo: TipoPeriodo
+  numero: int
+  ano: int
+  inicio: date
+  fim: date
+}
+
+class CargaHoraria {
+  id: uuid
+  nome: varchar
+  duracao: int
+  medida_tempo: MedidaTempo
+}
+
+class Local {
+  id: uuid
+  nome: varchar
+}
+
+class Horario {
+  id: uuid
+  dia_da_semana: int
+  hora_inicio: varchar
+  hora_fim: varchar
+}
+
+class Estudante {
+  id: uuid
+  nome: varchar
+  email: varchar
+}
+
+class EstudanteCurso {
+  id: uuid
+  matricula: varchar
+  vinculo_curso: date
+  situacao: SituacaoClasse
+}
+
+class CoordenadorCurso {
+  id: uuid
+  inicio: date
+  fim: date
+}
+
+class DiretorEnsino {
+  id: uuid
+  inicio: date
+  fim: date
+}
+
+enum MedidaTempo {
+  MINUTOS
+  HORAS
+}
+
+enum TipoPeriodo {
+  ANUAL
+  SEMESTRAL
+  BIMESTRAL
+}
+
+enum SituacaoClasse {
+  EM_CURSO
+  EVADIDO
+}
+
+enum RoleUsuario {
+  PROFESSOR
+  COORDENACAO
+  DIRETORENSINO
+  COORDENADORCURSO
+  ADMINISTRADOR
+}
+
+class DisciplinaTurma {
+  id: uuid
+}
+
+class Aula {
+  id: uuid
+  sequencia: int
+  data: date
+  horario_inicio: varchar
+  hora_fim: varchar
+}
+
+Campus "1" o-- "many" Curso : campus_id
+Campus "1" o-- "many" Usuario : campus_id
+Curso "1" o-- "many" Turma : curso_id
+Curso "1" o-- "many" Disciplina : curso_id
+Turma "1" o-- "many" Periodo : turma_id
+Curso "1" o-- "many" Periodo : curso_id
+Periodo "1" o-- "many" Disciplina : periodo_id
+Disciplina "1" o-- "many" DisciplinaTurma : disciplina_id
+Turma "1" o-- "many" DisciplinaTurma : turma_id
+Local "1" o-- "many" DisciplinaTurma : local_id
+DisciplinaTurma "1" o-- "many" Horario : disciplina_turma_id
+CargaHoraria "1" o-- "many" Horario : carga_horaria_id
+Estudante "1" o-- "many" EstudanteCurso : estudante_id
+Curso "1" o-- "many" EstudanteCurso : curso_id
+Usuario "1" o-- "many" ProfessorCurso : usuario_id
+Curso "1" o-- "many" CoordenadorCurso : curso_id
+Usuario "1" o-- "many" DiretorEnsino : usuario_id
+Campus "1" o-- "many" DiretorEnsino : campus_id
+Usuario "1" o-- "many" ProfessorDisciplina : usuario_id
+DisciplinaTurma "1" o-- "many" ProfessorDisciplina : disciplina_turma_id
+Estudante "1" o-- "many" EstudanteDisciplina : estudante_id
+DisciplinaTurma "1" o-- "many" EstudanteDisciplina : disciplina_turma_id
+
+@enduml

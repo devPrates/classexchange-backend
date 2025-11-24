@@ -58,6 +58,11 @@ INSERT INTO periodo (id, created_at, updated_at, nome, slug, tipo_periodo, numer
 INSERT INTO periodo (id, created_at, updated_at, nome, slug, tipo_periodo, numero, ano, inicio, fim, turma_id, curso_id) VALUES
 ('21212121-2121-2121-2121-212121212122', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 3/2025 - SI B', 'sem-3-2025-si-b', 'SEMESTRAL', 3, 2025, DATE '2026-02-10', DATE '2026-07-10', '00000000-0000-0000-0000-000000000000', '77777777-7777-7777-7777-777777777777');
 
+-- Períodos adicionais para validar resposta detalhada por slug de turma
+INSERT INTO periodo (id, created_at, updated_at, nome, slug, tipo_periodo, numero, ano, inicio, fim, turma_id, curso_id) VALUES
+('ab12cd34-ef56-7890-ab12-cd34ef567890', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 3/2026 - SI A', 'sem-3-2026-si-a', 'SEMESTRAL', 3, 2026, DATE '2026-02-01', DATE '2026-07-01', 'ffffffff-ffff-ffff-ffff-ffffffffffff', '77777777-7777-7777-7777-777777777777'),
+('bc23de45-fa67-8901-bc23-de45fa678901', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Semestre 3/2026 - SI B', 'sem-3-2026-si-b', 'SEMESTRAL', 3, 2026, DATE '2026-02-01', DATE '2026-07-01', '00000000-0000-0000-0000-000000000000', '77777777-7777-7777-7777-777777777777');
+
 INSERT INTO disciplina (id, created_at, updated_at, nome, slug, carga_horaria, ementa, curso_id, periodo_id) VALUES
 ('cccccccc-cccc-cccc-cccc-cccccccccccc', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Programação I', 'programacao-i', 80.0, 'Introdução à lógica e programação em Java.', '77777777-7777-7777-7777-777777777777', '13131313-1313-1313-1313-131313131313'),
 ('dddddddd-dddd-dddd-dddd-dddddddddddd', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Banco de Dados', 'banco-de-dados', 80.0, 'Modelagem de dados, SQL e normalização.', '77777777-7777-7777-7777-777777777777', '14141414-1414-1414-1414-141414141415'),
@@ -78,6 +83,12 @@ INSERT INTO disciplina (id, created_at, updated_at, nome, slug, carga_horaria, e
 ('5511dd66-ee77-8899-0000-112233445566', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Marketing', 'marketing', 60.0, 'Fundamentos de marketing e estratégias.', '88888888-8888-8888-8888-888888888888', '19191919-1919-1919-1919-191919191920'),
 ('6611ee77-8899-0000-1122-334455667788', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cálculo II', 'calculo-ii', 90.0, 'Integrais e aplicações.', '99999999-9999-9999-9999-999999999999', '20202020-2020-2020-2020-202020202021');
 
+-- Disciplinas associadas aos novos períodos de 2026
+INSERT INTO disciplina (id, created_at, updated_at, nome, slug, carga_horaria, ementa, curso_id, periodo_id) VALUES
+('c1d2e3f4-5678-9012-c3d4-e5f678901234', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Sistemas Operacionais', 'sistemas-operacionais', 80.0, 'Processos, threads, memória e sistemas de arquivos.', '77777777-7777-7777-7777-777777777777', 'ab12cd34-ef56-7890-ab12-cd34ef567890'),
+('d2e3f4a5-6789-0123-d4e5-f6a789012345', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Compiladores', 'compiladores', 80.0, 'Lexers, parsers, semântica e geração de código.', '77777777-7777-7777-7777-777777777777', 'ab12cd34-ef56-7890-ab12-cd34ef567890'),
+('e3f4a5b6-7890-1234-e5f6-a7b890123456', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Teoria da Computação', 'teoria-da-computacao', 60.0, 'Autômatos, gramáticas e complexidade.', '77777777-7777-7777-7777-777777777777', 'bc23de45-fa67-8901-bc23-de45fa678901');
+
 INSERT INTO local (id, created_at, updated_at, nome) VALUES
 ('16161616-1616-1616-1616-161616161616', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Laboratório 101'),
 ('17171717-1717-1717-1717-171717171717', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Sala 12'),
@@ -90,6 +101,12 @@ INSERT INTO disciplina_turma (id, created_at, updated_at, disciplina_id, turma_i
 ('aa000004-0004-0004-0004-000400040004', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'aaaa1111-2222-3333-4444-555566667777', '32323232-3232-3232-3232-323232323232', '17171717-1717-1717-1717-171717171717'),
 ('aa000005-0005-0005-0005-000500050005', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bbbb1111-2222-3333-4444-555566667777', 'ffffffff-ffff-ffff-ffff-ffffffffffff', '16161616-1616-1616-1616-161616161616');
 
+-- Vínculos Disciplina/Turma para novos períodos (usando SI A/B e locais existentes)
+INSERT INTO disciplina_turma (id, created_at, updated_at, disciplina_id, turma_id, local_id) VALUES
+('aa000006-0006-0006-0006-000600060006', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'c1d2e3f4-5678-9012-c3d4-e5f678901234', 'ffffffff-ffff-ffff-ffff-ffffffffffff', '16161616-1616-1616-1616-161616161616'),
+('aa000007-0007-0007-0007-000700070007', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'd2e3f4a5-6789-0123-d4e5-f6a789012345', 'ffffffff-ffff-ffff-ffff-ffffffffffff', '17171717-1717-1717-1717-171717171717'),
+('aa000008-0008-0008-0008-000800080008', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'e3f4a5b6-7890-1234-e5f6-a7b890123456', '00000000-0000-0000-0000-000000000000', '18181818-1818-1818-1818-181818181818');
+
 INSERT INTO carga_horaria (id, created_at, updated_at, nome, duracao, medida_tempo) VALUES
 ('bb000001-0001-0001-0001-000100010001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Aula Padrão', 60, 'MINUTOS'),
 ('bb000002-0002-0002-0002-000200020002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Aula Estendida', 2, 'HORAS');
@@ -99,6 +116,12 @@ INSERT INTO horario (id, created_at, updated_at, dia_da_semana, hora_inicio, hor
 ('cc000002-0002-0002-0002-000200020002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3, '08:00', '09:40', 'aa000001-0001-0001-0001-000100010001', 'bb000001-0001-0001-0001-000100010001'),
 ('cc000003-0003-0003-0003-000300030003', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, '10:00', '11:40', 'aa000002-0002-0002-0002-000200020002', 'bb000002-0002-0002-0002-000200020002'),
 ('cc000004-0004-0004-0004-000400040004', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5, '14:00', '15:40', 'aa000003-0003-0003-0003-000300030003', 'bb000001-0001-0001-0001-000100010001');
+
+-- Horários para novos vínculos disciplina/turma
+INSERT INTO horario (id, created_at, updated_at, dia_da_semana, hora_inicio, hora_fim, disciplina_turma_id, carga_horaria_id) VALUES
+('cc000005-0005-0005-0005-000500050005', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2, '08:00', '09:40', 'aa000006-0006-0006-0006-000600060006', 'bb000001-0001-0001-0001-000100010001'),
+('cc000006-0006-0006-0006-000600060006', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4, '10:00', '11:40', 'aa000007-0007-0007-0007-000700070007', 'bb000002-0002-0002-0002-000200020002'),
+('cc000007-0007-0007-0007-000700070007', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, '14:00', '15:40', 'aa000008-0008-0008-0008-000800080008', 'bb000001-0001-0001-0001-000100010001');
 
 INSERT INTO estudante (id, created_at, updated_at, nome, email) VALUES
 ('1c1c1c1c-1c1c-1c1c-1c1c-1c1c1c1c1c1c', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'José Almeida', 'jose.almeida@ifms.edu.br'),

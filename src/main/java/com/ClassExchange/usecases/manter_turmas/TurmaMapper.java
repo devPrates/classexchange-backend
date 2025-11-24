@@ -33,4 +33,18 @@ public class TurmaMapper {
         turma.setNumero(request.numero());
         turma.setCurso(curso);
     }
+
+    public TurmaComPeriodosResponse toResponseComPeriodos(Turma turma, java.util.List<com.ClassExchange.usecases.manter_periodos.PeriodoResponse> periodos) {
+        return new TurmaComPeriodosResponse(
+                turma.getId(),
+                turma.getNome(),
+                turma.getSlug(),
+                turma.getNumero(),
+                turma.getCurso() != null ? turma.getCurso().getId() : null,
+                turma.getCurso() != null ? turma.getCurso().getNome() : null,
+                periodos,
+                turma.getCreatedAt(),
+                turma.getUpdatedAt()
+        );
+    }
 }
