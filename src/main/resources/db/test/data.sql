@@ -5,22 +5,22 @@ INSERT INTO campus (id, created_at, updated_at, nome, sigla, email, slug, telefo
 INSERT INTO campus (id, created_at, updated_at, nome, sigla, email, slug, telefone, endereco) VALUES
 ('abcdabcd-abcd-abcd-abcd-abcdabcdabcd', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Campus Campo Grande', 'CG', 'campogrande@ifms.edu.br', 'campo-grande', '67 99999-0003', 'Av. Afonso Pena, 3000 - Campo Grande/MS');
 
-INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, role, campus_id) VALUES
-('33333333-3333-3333-3333-333333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Ana Silva', 'ana.silva@ifms.edu.br', 'senha123', '67 98888-1001', 'PROFESSOR', '11111111-1111-1111-1111-111111111111'),
-('44444444-4444-4444-4444-444444444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Carlos Pereira', 'carlos.pereira@ifms.edu.br', 'senha123', '67 98888-1002', 'PROFESSOR', '11111111-1111-1111-1111-111111111111'),
-('55555555-5555-5555-5555-555555555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Bruno Souza', 'bruno.souza@ifms.edu.br', 'senha123', '67 98888-1003', 'PROFESSOR', '22222222-2222-2222-2222-222222222222'),
-('66666666-6666-6666-6666-666666666666', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Daniela Rocha', 'daniela.rocha@ifms.edu.br', 'senha123', '67 98888-2001', 'COORDENADORCURSO', '11111111-1111-1111-1111-111111111111'),
-('77777777-7777-7777-7777-777777777777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Eduardo Lima', 'eduardo.lima@ifms.edu.br', 'senha123', '67 98888-2002', 'COORDENADORCURSO', '22222222-2222-2222-2222-222222222222'),
-('88888888-8888-8888-8888-888888888888', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Fernanda Alves', 'fernanda.alves@ifms.edu.br', 'senha123', '67 98888-3001', 'DIRETORENSINO', '11111111-1111-1111-1111-111111111111'),
-('99999999-9999-9999-9999-999999999999', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Admin User', 'admin@ifms.edu.br', 'senha123', '67 98888-0000', 'ADMINISTRADOR', '22222222-2222-2222-2222-222222222222');
+INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, siape, role, campus_id) VALUES
+('33333333-3333-3333-3333-333333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Ana Silva', 'ana.silva@ifms.edu.br', 'senha123', '67 98888-1001', 'SIAPE-1001', 'PROFESSOR', '11111111-1111-1111-1111-111111111111'),
+('44444444-4444-4444-4444-444444444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Carlos Pereira', 'carlos.pereira@ifms.edu.br', 'senha123', '67 98888-1002', 'SIAPE-1002', 'PROFESSOR', '11111111-1111-1111-1111-111111111111'),
+('55555555-5555-5555-5555-555555555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Bruno Souza', 'bruno.souza@ifms.edu.br', 'senha123', '67 98888-1003', 'SIAPE-1003', 'PROFESSOR', '22222222-2222-2222-2222-222222222222'),
+('66666666-6666-6666-6666-666666666666', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Daniela Rocha', 'daniela.rocha@ifms.edu.br', 'senha123', '67 98888-2001', NULL, 'COORDENADORCURSO', '11111111-1111-1111-1111-111111111111'),
+('77777777-7777-7777-7777-777777777777', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Eduardo Lima', 'eduardo.lima@ifms.edu.br', 'senha123', '67 98888-2002', NULL, 'COORDENADORCURSO', '22222222-2222-2222-2222-222222222222'),
+('88888888-8888-8888-8888-888888888888', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Fernanda Alves', 'fernanda.alves@ifms.edu.br', 'senha123', '67 98888-3001', NULL, 'DIRETORENSINO', '11111111-1111-1111-1111-111111111111'),
+('99999999-9999-9999-9999-999999999999', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Admin User', 'admin@ifms.edu.br', 'senha123', '67 98888-0000', NULL, 'ADMINISTRADOR', '22222222-2222-2222-2222-222222222222');
 
-INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, role, campus_id) VALUES
-('1a1a1a1a-2b2b-3c3c-4d4d-5e5e5e5e5e5e', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Camila Ribeiro', 'camila.ribeiro@ifms.edu.br', 'senha123', '67 98888-3002', 'COORDENACAO', '11111111-1111-1111-1111-111111111111');
+INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, siape, role, campus_id) VALUES
+('1a1a1a1a-2b2b-3c3c-4d4d-5e5e5e5e5e5e', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Camila Ribeiro', 'camila.ribeiro@ifms.edu.br', 'senha123', '67 98888-3002', NULL, 'COORDENACAO', '11111111-1111-1111-1111-111111111111');
 
-INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, role, campus_id) VALUES
-('aa11aa11-aa11-aa11-aa11-aa11aa11aa11', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Marcos Vieira', 'marcos.vieira@ifms.edu.br', 'senha123', '67 98888-4001', 'PROFESSOR', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd'),
-('bb22bb22-bb22-bb22-bb22-bb22bb22bb22', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Patrícia Gomes', 'patricia.gomes@ifms.edu.br', 'senha123', '67 98888-4002', 'COORDENADORCURSO', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd'),
-('cc33cc33-cc33-cc33-cc33-cc33cc33cc33', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Rafael Souza', 'rafael.souza@ifms.edu.br', 'senha123', '67 98888-4003', 'DIRETORENSINO', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd');
+INSERT INTO usuario (id, created_at, updated_at, nome, email, senha, celular, siape, role, campus_id) VALUES
+('aa11aa11-aa11-aa11-aa11-aa11aa11aa11', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Marcos Vieira', 'marcos.vieira@ifms.edu.br', 'senha123', '67 98888-4001', 'SIAPE-4001', 'PROFESSOR', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd'),
+('bb22bb22-bb22-bb22-bb22-bb22bb22bb22', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Patrícia Gomes', 'patricia.gomes@ifms.edu.br', 'senha123', '67 98888-4002', NULL, 'COORDENADORCURSO', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd'),
+('cc33cc33-cc33-cc33-cc33-cc33cc33cc33', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Rafael Souza', 'rafael.souza@ifms.edu.br', 'senha123', '67 98888-4003', NULL, 'DIRETORENSINO', 'abcdabcd-abcd-abcd-abcd-abcdabcdabcd');
 
 INSERT INTO diretor_ensino (id, created_at, updated_at, inicio, fim, usuario_id, campus_id) VALUES
 ('12121212-1212-1212-1212-121212121213', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, DATE '2025-01-01', NULL, '88888888-8888-8888-8888-888888888888', '11111111-1111-1111-1111-111111111111');

@@ -12,8 +12,8 @@ public record CursoResponse(
         UUID campusId,
         String campusNome,
         List<TurmaSimplificada> turmas,
-        List<ProfessorCursoSimplificado> professoresCurso,
         CoordenadorSimplificado coordenadorCurso,
+        long professoresCount,
         long studentsCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -28,7 +28,8 @@ public record CursoResponse(
             UUID id,
             UUID usuarioId,
             String usuarioNome,
-            String usuarioEmail
+            String usuarioEmail,
+            String usuarioSiape
     ) {}
 
     public record CoordenadorSimplificado(

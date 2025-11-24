@@ -94,16 +94,16 @@ public class CursoController {
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
     }
 
-    @GetMapping("/{id}/estudantes")
-    @Operation(summary = "Listar estudantes do curso", description = "Retorna todos os estudantes vinculados ao curso informado")
+    @GetMapping("/{id}/professores")
+    @Operation(summary = "Listar professores do curso", description = "Retorna os professores vinculados ao curso informado")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Estudantes retornados com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Professores retornados com sucesso"),
             @ApiResponse(responseCode = "404", description = "Curso não encontrado")
     })
-    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado> listarEstudantesDoCurso(
+    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.ProfessorCursoSimplificado> listarProfessoresDoCurso(
             @Parameter(description = "ID do curso", required = true)
             @PathVariable java.util.UUID id) {
-        return service.listarEstudantesDoCurso(id);
+        return service.listarProfessoresDoCurso(id);
     }
 
     

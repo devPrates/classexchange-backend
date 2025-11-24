@@ -86,10 +86,7 @@ public class CursoService {
                 .map(mapper::toTurmaSimplificada)
                 .toList();
 
-        java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.ProfessorCursoSimplificado> professoresCurso = professorCursoRepository.findByCurso(curso)
-                .stream()
-                .map(mapper::toProfessorCursoSimplificado)
-                .toList();
+        long professoresCount = professorCursoRepository.countByCurso(curso);
 
         CursoResponse.CoordenadorSimplificado coordenador = coordenadorCursoRepository
                 .findByCurso(curso).stream()
@@ -103,14 +100,14 @@ public class CursoService {
                 .orElse(null);
 
         long studentsCount = estudanteCursoRepository.countByCursoId(curso.getId());
-        return mapper.toResponse(curso, turmas, professoresCurso, coordenador, studentsCount);
+        return mapper.toResponse(curso, turmas, coordenador, professoresCount, studentsCount);
     }
 
-    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.EstudanteSimplificado> listarEstudantesDoCurso(java.util.UUID id) {
+    public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.ProfessorCursoSimplificado> listarProfessoresDoCurso(java.util.UUID id) {
         Curso curso = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
-        return estudanteCursoRepository.findByCursoId(curso.getId()).stream()
-                .map(mapper::toEstudanteSimplificado)
+        return professorCursoRepository.findByCurso(curso).stream()
+                .map(mapper::toProfessorCursoSimplificado)
                 .toList();
     }
 

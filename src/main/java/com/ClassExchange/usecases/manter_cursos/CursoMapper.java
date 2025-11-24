@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class CursoMapper {
 
-    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, List<CursoResponse.ProfessorCursoSimplificado> professoresCurso, CursoResponse.CoordenadorSimplificado coordenadorCurso, long studentsCount) {
+    public CursoResponse toResponse(Curso curso, List<CursoResponse.TurmaSimplificada> turmas, CursoResponse.CoordenadorSimplificado coordenadorCurso, long professoresCount, long studentsCount) {
         return new CursoResponse(
                 curso.getId(),
                 curso.getNome(),
@@ -19,8 +19,8 @@ public class CursoMapper {
                 curso.getCampus() != null ? curso.getCampus().getId() : null,
                 curso.getCampus() != null ? curso.getCampus().getNome() : null,
                 turmas,
-                professoresCurso,
                 coordenadorCurso,
+                professoresCount,
                 studentsCount,
                 curso.getCreatedAt(),
                 curso.getUpdatedAt()
@@ -54,7 +54,8 @@ public class CursoMapper {
                 professorCurso.getId(),
                 professorCurso.getUsuario() != null ? professorCurso.getUsuario().getId() : null,
                 professorCurso.getUsuario() != null ? professorCurso.getUsuario().getNome() : null,
-                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getEmail() : null
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getEmail() : null,
+                professorCurso.getUsuario() != null ? professorCurso.getUsuario().getSiape() : null
         );
     }
 

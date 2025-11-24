@@ -26,6 +26,9 @@ public class Usuario extends BaseEntity {
     @Column(nullable = false)
     private String celular;
 
+    @Column(unique = true)
+    private String siape;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleUsuario role;

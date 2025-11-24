@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface ProfessorCursoRepository extends JpaRepository<ProfessorCurso, UUID> {
     List<ProfessorCurso> findByUsuario(Usuario usuario);
     List<ProfessorCurso> findByCurso(Curso curso);
+    long countByCurso(Curso curso);
 }
