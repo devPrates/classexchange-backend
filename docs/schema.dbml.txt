@@ -1,3 +1,37 @@
+///////////////////////////////////////////////////////
+// ENUMS
+///////////////////////////////////////////////////////
+
+Enum TipoPeriodo {
+  ANUAL
+  SEMESTRAL
+  BIMESTRAL
+}
+
+Enum DiaSemana {
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+  SABADO
+  DOMINGO
+}
+
+Enum MedidaTempo {
+  MINUTOS
+  HORAS
+}
+
+Enum SituacaoClasse {
+  EM_CURSO
+  EVADIDO
+}
+
+///////////////////////////////////////////////////////
+// CAMPUS / USUÁRIOS / ROLES / PERMISSÕES
+///////////////////////////////////////////////////////
+
 Table Campus {
   id uuid [pk]
   nome varchar [not null]
@@ -14,17 +48,48 @@ Table Usuario {
   email varchar [not null, unique]
   senha varchar [not null]
   celular varchar [not null]
-  role RoleUsuario [not null]
   campus_id uuid [not null, ref: > Campus.id]
 }
 
-Enum RoleUsuario {
-  PROFESSOR
-  COORDENACAO
-  DIRETORENSINO
-  COORDENADORCURSO
-  ADMINISTRADOR
+Table Role {
+  id uuid [pk]
+  nome varchar [not null, unique] // ex: ADMIN, PROFESSOR, COORDENADOR
+  descricao text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
 }
+
+Table UsuarioRole {
+  id uuid [pk]
+  usuario_id uuid [not null, ref: > Usuario.id]
+  role_id uuid [not null, ref: > Role.id]
+
+  unique (usuario_id, role_id)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table Permission {
+  id uuid [pk]
+  nome varchar [not null, unique]
+  descricao text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table RolePermission {
+  id uuid [pk]
+  role_id uuid [not null, ref: > Role.id]
+  permission_id uuid [not null, ref: > Permission.id]
+
+  unique (role_id, permission_id)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+///////////////////////////////////////////////////////
+// CURSOS / TURMAS / PERÍODOS / DISCIPLINAS
+///////////////////////////////////////////////////////
 
 Table Curso {
   id uuid [pk]
@@ -37,15 +102,11 @@ Table Curso {
 Table Turma {
   id uuid [pk]
   nome varchar [not null]
-  slug varchar(100) [not null, unique]
-  numero int [not null]
+  slug varchar(100) [not null]
+  numero int [not null] // número da turma
   curso_id uuid [not null, ref: > Curso.id]
-}
 
-Enum TipoPeriodo {
-  ANUAL
-  SEMESTRAL
-  BIMESTRAL
+  unique (slug, curso_id)
 }
 
 Table Periodo {
@@ -58,51 +119,54 @@ Table Periodo {
   inicio date [not null]
   fim date [not null]
   turma_id uuid [not null, ref: > Turma.id]
-  curso_id uuid [not null, ref: > Curso.id]
 }
 
 Table Disciplina {
   id uuid [pk]
   nome varchar [not null]
-  slug varchar(100) [not null, unique]
+  slug varchar(100) [not null]
   carga_horaria double
   ementa text
   curso_id uuid [not null, ref: > Curso.id]
-  periodo_id uuid [not null, ref: > Periodo.id]
+
+  unique (slug, curso_id)
 }
+
+///////////////////////////////////////////////////////
+// AULA: VÍNCULO ENTRE DISCIPLINA + PERÍODO + PROFESSOR + LOCAL
+///////////////////////////////////////////////////////
 
 Table Local {
   id uuid [pk]
   nome varchar [not null]
+  campus_id uuid [not null, ref: > Campus.id]
+  capacidade int
+  bloco varchar
+  andar varchar
+  tipo varchar
 }
 
-Enum MedidaTempo {
-  MINUTOS
-  HORAS
-}
-
-Table CargaHoraria {
+Table Aula {
   id uuid [pk]
-  nome varchar [not null]
-  duracao int [not null]
-  medida_tempo MedidaTempo [not null]
-}
-
-Table DisciplinaTurma {
-  id uuid [pk]
+  periodo_id uuid [not null, ref: > Periodo.id]
   disciplina_id uuid [not null, ref: > Disciplina.id]
-  turma_id uuid [not null, ref: > Turma.id]
+  professor_id uuid [not null, ref: > Usuario.id]
   local_id uuid [not null, ref: > Local.id]
+
+  note: 'Representa uma disciplina dentro de um período, com professor e sala.'
 }
 
 Table Horario {
   id uuid [pk]
-  dia_da_semana int [not null]
-  hora_inicio varchar [not null]
-  hora_fim varchar [not null]
-  disciplina_turma_id uuid [not null, ref: > DisciplinaTurma.id]
-  carga_horaria_id uuid [not null, ref: > CargaHoraria.id]
+  dia_da_semana DiaSemana [not null]
+  hora_inicio time [not null]
+  hora_fim time [not null]
+  aula_id uuid [not null, ref: > Aula.id]
 }
+
+///////////////////////////////////////////////////////
+// ESTUDANTES
+///////////////////////////////////////////////////////
 
 Table Estudante {
   id uuid [pk]
@@ -110,42 +174,28 @@ Table Estudante {
   email varchar [not null, unique]
 }
 
-Enum SituacaoClasse {
-  EM_CURSO
-  EVADIDO
-}
-
 Table EstudanteCurso {
   id uuid [pk]
   matricula varchar [not null]
-  vinculo_curso date [not null]
+  inicio date [not null]
   situacao SituacaoClasse [not null]
   estudante_id uuid [not null, ref: > Estudante.id]
   curso_id uuid [not null, ref: > Curso.id]
+
+  unique (estudante_id, curso_id)
 }
 
 Table EstudanteDisciplina {
   id uuid [pk]
-  matricula varchar [not null]
-  vinculo_curso date [not null]
-  situacao SituacaoClasse [not null]
-  estudante_id uuid [not null, ref: > Estudante.id]
-  disciplina_turma_id uuid [not null, ref: > DisciplinaTurma.id]
+  estudante_curso_id uuid [not null, ref: > EstudanteCurso.id]
+  aula_id uuid [not null, ref: > Aula.id]
+
+  unique (estudante_curso_id, aula_id)
 }
 
-Table ProfessorCurso {
-  id uuid [pk]
-  usuario_id uuid [not null, ref: > Usuario.id]
-  curso_id uuid [not null, ref: > Curso.id]
-}
-
-Table ProfessorDisciplina {
-  id uuid [pk]
-  inicio date [not null]
-  fim date
-  usuario_id uuid [not null, ref: > Usuario.id]
-  disciplina_turma_id uuid [not null, ref: > DisciplinaTurma.id]
-}
+///////////////////////////////////////////////////////
+// ATRIBUIÇÕES ACADÊMICAS COM HISTÓRICO (COORDENADORES, DIRETORES)
+///////////////////////////////////////////////////////
 
 Table CoordenadorCurso {
   id uuid [pk]

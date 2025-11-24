@@ -6,6 +6,12 @@ import java.util.UUID;
 public record LocalResponse(
         UUID id,
         String nome,
+        UUID campusId,
+        String campusNome,
+        Integer capacidade,
+        String bloco,
+        String andar,
+        String tipo,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

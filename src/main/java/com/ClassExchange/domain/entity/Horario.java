@@ -11,21 +11,18 @@ import lombok.*;
 @Builder
 public class Horario extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private int diaDaSemana;
+    private com.ClassExchange.domain.enums.DiaSemana diaDaSemana;
 
     @Column(nullable = false)
-    private String horaInicio;
+    private java.time.LocalTime horaInicio;
 
     @Column(nullable = false)
-    private String horaFim;
+    private java.time.LocalTime horaFim;
 
     @ManyToOne
-    @JoinColumn(name = "disciplina_turma_id", nullable = false)
-    private DisciplinaTurma disciplinaTurma;
-
-    @ManyToOne
-    @JoinColumn(name = "carga_horaria_id", nullable = false)
-    private CargaHoraria cargaHoraria;
+    @JoinColumn(name = "aula_id", nullable = false)
+    private Aula aula;
 
 }

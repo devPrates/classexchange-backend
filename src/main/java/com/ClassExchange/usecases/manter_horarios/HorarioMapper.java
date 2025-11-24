@@ -1,8 +1,7 @@
 package com.ClassExchange.usecases.manter_horarios;
 
-import com.ClassExchange.domain.entity.CargaHoraria;
-import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.Horario;
+import com.ClassExchange.domain.entity.Aula;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,33 +11,35 @@ public class HorarioMapper {
         return new HorarioResponse(
                 horario.getId(),
                 horario.getDiaDaSemana(),
-                horario.getHoraInicio(),
-                horario.getHoraFim(),
-                horario.getDisciplinaTurma() != null ? horario.getDisciplinaTurma().getId() : null,
-                horario.getDisciplinaTurma() != null && horario.getDisciplinaTurma().getDisciplina() != null ? horario.getDisciplinaTurma().getDisciplina().getNome() : null,
-                horario.getDisciplinaTurma() != null && horario.getDisciplinaTurma().getTurma() != null ? horario.getDisciplinaTurma().getTurma().getNome() : null,
-                horario.getCargaHoraria() != null ? horario.getCargaHoraria().getId() : null,
-                horario.getCargaHoraria() != null ? horario.getCargaHoraria().getNome() : null,
+                horario.getHoraInicio() != null ? horario.getHoraInicio().toString() : null,
+                horario.getHoraFim() != null ? horario.getHoraFim().toString() : null,
+                horario.getAula() != null ? horario.getAula().getId() : null,
+                horario.getAula() != null && horario.getAula().getPeriodo() != null ? horario.getAula().getPeriodo().getId() : null,
+                horario.getAula() != null && horario.getAula().getPeriodo() != null ? horario.getAula().getPeriodo().getNome() : null,
+                horario.getAula() != null && horario.getAula().getDisciplina() != null ? horario.getAula().getDisciplina().getId() : null,
+                horario.getAula() != null && horario.getAula().getDisciplina() != null ? horario.getAula().getDisciplina().getNome() : null,
+                horario.getAula() != null && horario.getAula().getProfessor() != null ? horario.getAula().getProfessor().getId() : null,
+                horario.getAula() != null && horario.getAula().getProfessor() != null ? horario.getAula().getProfessor().getNome() : null,
+                horario.getAula() != null && horario.getAula().getLocal() != null ? horario.getAula().getLocal().getId() : null,
+                horario.getAula() != null && horario.getAula().getLocal() != null ? horario.getAula().getLocal().getNome() : null,
                 horario.getCreatedAt(),
                 horario.getUpdatedAt()
         );
     }
 
-    public Horario toEntity(HorarioRequest request, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria) {
+    public Horario toEntity(HorarioRequest request, Aula aula) {
         Horario horario = new Horario();
         horario.setDiaDaSemana(request.diaDaSemana());
-        horario.setHoraInicio(request.horaInicio());
-        horario.setHoraFim(request.horaFim());
-        horario.setDisciplinaTurma(disciplinaTurma);
-        horario.setCargaHoraria(cargaHoraria);
+        horario.setHoraInicio(java.time.LocalTime.parse(request.horaInicio()));
+        horario.setHoraFim(java.time.LocalTime.parse(request.horaFim()));
+        horario.setAula(aula);
         return horario;
     }
 
-    public void updateEntityFromRequest(HorarioRequest request, Horario horario, DisciplinaTurma disciplinaTurma, CargaHoraria cargaHoraria) {
+    public void updateEntityFromRequest(HorarioRequest request, Horario horario, Aula aula) {
         horario.setDiaDaSemana(request.diaDaSemana());
-        horario.setHoraInicio(request.horaInicio());
-        horario.setHoraFim(request.horaFim());
-        horario.setDisciplinaTurma(disciplinaTurma);
-        horario.setCargaHoraria(cargaHoraria);
+        horario.setHoraInicio(java.time.LocalTime.parse(request.horaInicio()));
+        horario.setHoraFim(java.time.LocalTime.parse(request.horaFim()));
+        horario.setAula(aula);
     }
 }

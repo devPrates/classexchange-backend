@@ -19,8 +19,6 @@ public class Estudante extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "estudante", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<EstudanteDisciplina> estudanteDisciplinas;
 
     @OneToMany(mappedBy = "estudante", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<EstudanteCurso> estudanteCursos;

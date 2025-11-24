@@ -32,10 +32,8 @@ public class Campus extends BaseEntity {
     @Column(nullable = false, unique = true, length = 100)
     private String slug;
 
-    @NotBlank(message = "Telefone é obrigatório")
     private String telefone;
 
-    @NotBlank(message = "Endereço é obrigatório")
     private String endereco;
 
     @OneToMany(mappedBy = "campus")

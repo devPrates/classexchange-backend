@@ -1,11 +1,9 @@
 package com.ClassExchange.usecases.manter_horarios;
 
-import com.ClassExchange.domain.entity.CargaHoraria;
-import com.ClassExchange.domain.entity.DisciplinaTurma;
 import com.ClassExchange.domain.entity.Horario;
+import com.ClassExchange.domain.entity.Aula;
 import com.ClassExchange.exception.NotFoundException;
-import com.ClassExchange.usecases.manter_cargaHoraria.CargaHorariaRepository;
-import com.ClassExchange.usecases.manter_disciplinaTurma.DisciplinaTurmaRepository;
+import com.ClassExchange.usecases.manter_aulas.AulaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +16,14 @@ import java.util.UUID;
 public class HorarioService {
 
     private final HorarioRepository repository;
-    private final DisciplinaTurmaRepository disciplinaTurmaRepository;
-    private final CargaHorariaRepository cargaHorariaRepository;
+    private final AulaRepository aulaRepository;
     private final HorarioMapper mapper;
 
     public HorarioResponse criar(HorarioRequest request) {
-        DisciplinaTurma disciplinaTurma = disciplinaTurmaRepository.findById(request.disciplinaTurmaId())
-                .orElseThrow(() -> new NotFoundException("DisciplinaTurma não encontrada"));
-        CargaHoraria cargaHoraria = cargaHorariaRepository.findById(request.cargaHorariaId())
-                .orElseThrow(() -> new NotFoundException("CargaHoraria não encontrada"));
+        Aula aula = aulaRepository.findById(request.aulaId())
+                .orElseThrow(() -> new NotFoundException("Aula não encontrada"));
 
-        Horario horario = mapper.toEntity(request, disciplinaTurma, cargaHoraria);
+        Horario horario = mapper.toEntity(request, aula);
         return toResponse(repository.save(horario));
     }
 
@@ -46,12 +41,10 @@ public class HorarioService {
     public HorarioResponse atualizar(UUID id, HorarioRequest request) {
         Horario horario = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Horario não encontrado"));
-        DisciplinaTurma disciplinaTurma = disciplinaTurmaRepository.findById(request.disciplinaTurmaId())
-                .orElseThrow(() -> new NotFoundException("DisciplinaTurma não encontrada"));
-        CargaHoraria cargaHoraria = cargaHorariaRepository.findById(request.cargaHorariaId())
-                .orElseThrow(() -> new NotFoundException("CargaHoraria não encontrada"));
+        Aula aula = aulaRepository.findById(request.aulaId())
+                .orElseThrow(() -> new NotFoundException("Aula não encontrada"));
 
-        mapper.updateEntityFromRequest(request, horario, disciplinaTurma, cargaHoraria);
+        mapper.updateEntityFromRequest(request, horario, aula);
         return toResponse(repository.save(horario));
     }
 

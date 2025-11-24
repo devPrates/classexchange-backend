@@ -1,11 +1,12 @@
 package com.ClassExchange.usecases.manter_estudanteDisciplina;
 
-import com.ClassExchange.domain.entity.DisciplinaTurma;
-import com.ClassExchange.domain.entity.Estudante;
+import com.ClassExchange.domain.entity.EstudanteCurso;
 import com.ClassExchange.domain.entity.EstudanteDisciplina;
+import com.ClassExchange.domain.entity.Aula;
+import com.ClassExchange.exception.BusinessException;
 import com.ClassExchange.exception.NotFoundException;
-import com.ClassExchange.usecases.manter_disciplinaTurma.DisciplinaTurmaRepository;
-import com.ClassExchange.usecases.manter_estudantes.EstudanteRepository;
+import com.ClassExchange.usecases.manter_estudanteCurso.EstudanteCursoRepository;
+import com.ClassExchange.usecases.manter_aulas.AulaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +19,20 @@ import java.util.UUID;
 public class EstudanteDisciplinaService {
 
     private final EstudanteDisciplinaRepository repository;
-    private final EstudanteRepository estudanteRepository;
-    private final DisciplinaTurmaRepository disciplinaTurmaRepository;
+    private final EstudanteCursoRepository estudanteCursoRepository;
+    private final AulaRepository aulaRepository;
     private final EstudanteDisciplinaMapper mapper;
 
     public EstudanteDisciplinaResponse criar(EstudanteDisciplinaRequest request) {
-        Estudante estudante = estudanteRepository.findById(request.estudanteId())
-                .orElseThrow(() -> new NotFoundException("Estudante não encontrado"));
-        DisciplinaTurma disciplinaTurma = disciplinaTurmaRepository.findById(request.disciplinaTurmaId())
-                .orElseThrow(() -> new NotFoundException("DisciplinaTurma não encontrada"));
+        EstudanteCurso estudanteCurso = estudanteCursoRepository.findById(request.estudanteCursoId())
+                .orElseThrow(() -> new NotFoundException("EstudanteCurso não encontrado"));
+        Aula aula = aulaRepository.findById(request.aulaId())
+                .orElseThrow(() -> new NotFoundException("Aula não encontrada"));
 
-        EstudanteDisciplina ed = mapper.toEntity(request, estudante, disciplinaTurma);
+        repository.findByEstudanteCursoAndAula(estudanteCurso, aula)
+                .ifPresent(x -> { throw new BusinessException("Vínculo já existe para este estudante/curso e aula"); });
+
+        EstudanteDisciplina ed = mapper.toEntity(request, estudanteCurso, aula);
         return toResponse(repository.save(ed));
     }
 
@@ -46,12 +50,12 @@ public class EstudanteDisciplinaService {
     public EstudanteDisciplinaResponse atualizar(UUID id, EstudanteDisciplinaRequest request) {
         EstudanteDisciplina ed = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("EstudanteDisciplina não encontrada"));
-        Estudante estudante = estudanteRepository.findById(request.estudanteId())
-                .orElseThrow(() -> new NotFoundException("Estudante não encontrado"));
-        DisciplinaTurma disciplinaTurma = disciplinaTurmaRepository.findById(request.disciplinaTurmaId())
-                .orElseThrow(() -> new NotFoundException("DisciplinaTurma não encontrada"));
+        EstudanteCurso estudanteCurso = estudanteCursoRepository.findById(request.estudanteCursoId())
+                .orElseThrow(() -> new NotFoundException("EstudanteCurso não encontrado"));
+        Aula aula = aulaRepository.findById(request.aulaId())
+                .orElseThrow(() -> new NotFoundException("Aula não encontrada"));
 
-        mapper.updateEntityFromRequest(request, ed, estudante, disciplinaTurma);
+        mapper.updateEntityFromRequest(request, ed, estudanteCurso, aula);
         return toResponse(repository.save(ed));
     }
 

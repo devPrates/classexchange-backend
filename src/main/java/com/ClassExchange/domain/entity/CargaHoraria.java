@@ -4,8 +4,6 @@ import com.ClassExchange.domain.enums.MedidaTempo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -24,7 +22,5 @@ public class CargaHoraria extends BaseEntity {
     @Column(nullable = false)
     private MedidaTempo medidaTempo;
 
-    @OneToMany(mappedBy = "cargaHoraria")
-    private List<Horario> horarios;
 
 }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"slug", "curso_id"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,7 +17,7 @@ public class Disciplina extends BaseEntity {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String slug;
 
     @ManyToOne

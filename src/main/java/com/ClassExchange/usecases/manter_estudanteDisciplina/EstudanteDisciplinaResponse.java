@@ -1,20 +1,18 @@
 package com.ClassExchange.usecases.manter_estudanteDisciplina;
 
-import com.ClassExchange.domain.enums.SituacaoClasse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record EstudanteDisciplinaResponse(
         UUID id,
-        String matricula,
-        LocalDate vinculoCurso,
-        SituacaoClasse situacao,
-        UUID estudanteId,
+        UUID estudanteCursoId,
+        String cursoNome,
         String estudanteNome,
-        UUID disciplinaTurmaId,
+        UUID aulaId,
+        String periodoNome,
         String disciplinaNome,
-        String turmaNome,
+        String professorNome,
+        String localNome,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

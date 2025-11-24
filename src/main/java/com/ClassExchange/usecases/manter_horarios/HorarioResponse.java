@@ -5,14 +5,18 @@ import java.util.UUID;
 
 public record HorarioResponse(
         UUID id,
-        Integer diaDaSemana,
+        com.ClassExchange.domain.enums.DiaSemana diaDaSemana,
         String horaInicio,
         String horaFim,
-        UUID disciplinaTurmaId,
+        UUID aulaId,
+        UUID periodoId,
+        String periodoNome,
+        UUID disciplinaId,
         String disciplinaNome,
-        String turmaNome,
-        UUID cargaHorariaId,
-        String cargaHorariaNome,
+        UUID professorId,
+        String professorNome,
+        UUID localId,
+        String localNome,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

@@ -1,6 +1,7 @@
 package com.ClassExchange.usecases.manter_locais;
 
 import com.ClassExchange.domain.entity.Local;
+import com.ClassExchange.domain.entity.Campus;
 import com.ClassExchange.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,20 @@ public class LocalService {
 
     private final LocalRepository repository;
     private final LocalMapper mapper;
+    private final com.ClassExchange.usecases.manter_campus.CampusRepository campusRepository;
 
     @Transactional
     public LocalResponse criar(LocalRequest request) {
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
+
         Local local = Local.builder()
                 .nome(request.nome())
+                .campus(campus)
+                .capacidade(request.capacidade())
+                .bloco(request.bloco())
+                .andar(request.andar())
+                .tipo(request.tipo())
                 .build();
 
         return toResponse(repository.save(local));
@@ -42,7 +52,15 @@ public class LocalService {
         Local local = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Local não encontrado"));
 
+        Campus campus = campusRepository.findById(request.campusId())
+                .orElseThrow(() -> new NotFoundException("Campus não encontrado"));
+
         local.setNome(request.nome());
+        local.setCampus(campus);
+        local.setCapacidade(request.capacidade());
+        local.setBloco(request.bloco());
+        local.setAndar(request.andar());
+        local.setTipo(request.tipo());
 
         return toResponse(repository.save(local));
     }

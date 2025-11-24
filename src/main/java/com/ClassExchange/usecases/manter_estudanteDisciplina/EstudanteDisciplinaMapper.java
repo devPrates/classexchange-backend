@@ -1,8 +1,6 @@
 package com.ClassExchange.usecases.manter_estudanteDisciplina;
 
-import com.ClassExchange.domain.entity.DisciplinaTurma;
-import com.ClassExchange.domain.entity.Estudante;
-import com.ClassExchange.domain.entity.EstudanteDisciplina;
+import com.ClassExchange.domain.entity.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,34 +9,28 @@ public class EstudanteDisciplinaMapper {
     public EstudanteDisciplinaResponse toResponse(EstudanteDisciplina estudanteDisciplina) {
         return new EstudanteDisciplinaResponse(
                 estudanteDisciplina.getId(),
-                estudanteDisciplina.getMatricula(),
-                estudanteDisciplina.getVinculoCurso(),
-                estudanteDisciplina.getSituacao(),
-                estudanteDisciplina.getEstudante() != null ? estudanteDisciplina.getEstudante().getId() : null,
-                estudanteDisciplina.getEstudante() != null ? estudanteDisciplina.getEstudante().getNome() : null,
-                estudanteDisciplina.getDisciplinaTurma() != null ? estudanteDisciplina.getDisciplinaTurma().getId() : null,
-                estudanteDisciplina.getDisciplinaTurma() != null && estudanteDisciplina.getDisciplinaTurma().getDisciplina() != null ? estudanteDisciplina.getDisciplinaTurma().getDisciplina().getNome() : null,
-                estudanteDisciplina.getDisciplinaTurma() != null && estudanteDisciplina.getDisciplinaTurma().getTurma() != null ? estudanteDisciplina.getDisciplinaTurma().getTurma().getNome() : null,
+                estudanteDisciplina.getEstudanteCurso() != null ? estudanteDisciplina.getEstudanteCurso().getId() : null,
+                estudanteDisciplina.getEstudanteCurso() != null && estudanteDisciplina.getEstudanteCurso().getCurso() != null ? estudanteDisciplina.getEstudanteCurso().getCurso().getNome() : null,
+                estudanteDisciplina.getEstudanteCurso() != null && estudanteDisciplina.getEstudanteCurso().getEstudante() != null ? estudanteDisciplina.getEstudanteCurso().getEstudante().getNome() : null,
+                estudanteDisciplina.getAula() != null ? estudanteDisciplina.getAula().getId() : null,
+                estudanteDisciplina.getAula() != null && estudanteDisciplina.getAula().getPeriodo() != null ? estudanteDisciplina.getAula().getPeriodo().getNome() : null,
+                estudanteDisciplina.getAula() != null && estudanteDisciplina.getAula().getDisciplina() != null ? estudanteDisciplina.getAula().getDisciplina().getNome() : null,
+                estudanteDisciplina.getAula() != null && estudanteDisciplina.getAula().getProfessor() != null ? estudanteDisciplina.getAula().getProfessor().getNome() : null,
+                estudanteDisciplina.getAula() != null && estudanteDisciplina.getAula().getLocal() != null ? estudanteDisciplina.getAula().getLocal().getNome() : null,
                 estudanteDisciplina.getCreatedAt(),
                 estudanteDisciplina.getUpdatedAt()
         );
     }
 
-    public EstudanteDisciplina toEntity(EstudanteDisciplinaRequest request, Estudante estudante, DisciplinaTurma disciplinaTurma) {
+    public EstudanteDisciplina toEntity(EstudanteDisciplinaRequest request, EstudanteCurso estudanteCurso, Aula aula) {
         EstudanteDisciplina ed = new EstudanteDisciplina();
-        ed.setMatricula(request.matricula());
-        ed.setVinculoCurso(request.vinculoCurso());
-        ed.setSituacao(request.situacao());
-        ed.setEstudante(estudante);
-        ed.setDisciplinaTurma(disciplinaTurma);
+        ed.setEstudanteCurso(estudanteCurso);
+        ed.setAula(aula);
         return ed;
     }
 
-    public void updateEntityFromRequest(EstudanteDisciplinaRequest request, EstudanteDisciplina estudanteDisciplina, Estudante estudante, DisciplinaTurma disciplinaTurma) {
-        estudanteDisciplina.setMatricula(request.matricula());
-        estudanteDisciplina.setVinculoCurso(request.vinculoCurso());
-        estudanteDisciplina.setSituacao(request.situacao());
-        estudanteDisciplina.setEstudante(estudante);
-        estudanteDisciplina.setDisciplinaTurma(disciplinaTurma);
+    public void updateEntityFromRequest(EstudanteDisciplinaRequest request, EstudanteDisciplina estudanteDisciplina, EstudanteCurso estudanteCurso, Aula aula) {
+        estudanteDisciplina.setEstudanteCurso(estudanteCurso);
+        estudanteDisciplina.setAula(aula);
     }
 }

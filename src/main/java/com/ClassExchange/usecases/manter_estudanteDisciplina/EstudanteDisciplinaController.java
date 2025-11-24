@@ -16,20 +16,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/estudante-disciplinas")
 @RequiredArgsConstructor
-@Tag(name = "EstudanteDisciplina", description = "API para vínculo de estudantes às disciplinas/turmas")
+@Tag(name = "EstudanteDisciplina", description = "API para vínculo de estudantes (curso) às aulas")
 public class EstudanteDisciplinaController {
 
     private final EstudanteDisciplinaService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Criar vínculo estudante/disciplinaturma")
+    @Operation(summary = "Criar vínculo estudante-curso/aula")
     public EstudanteDisciplinaResponse criar(@Valid @RequestBody EstudanteDisciplinaRequest request) {
         return service.criar(request);
     }
 
     @GetMapping
-    @Operation(summary = "Listar vínculos estudante/disciplinaturma")
+    @Operation(summary = "Listar vínculos estudante-curso/aula")
     public List<EstudanteDisciplinaResponse> listarTodos() {
         return service.listarTodos();
     }
@@ -46,14 +46,14 @@ public class EstudanteDisciplinaController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar vínculo estudante/disciplinaturma")
+    @Operation(summary = "Atualizar vínculo estudante-curso/aula")
     public EstudanteDisciplinaResponse atualizar(@PathVariable UUID id, @Valid @RequestBody EstudanteDisciplinaRequest request) {
         return service.atualizar(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Deletar vínculo estudante/disciplinaturma")
+    @Operation(summary = "Deletar vínculo estudante-curso/aula")
     public void deletar(@PathVariable UUID id) {
         service.deletar(id);
     }

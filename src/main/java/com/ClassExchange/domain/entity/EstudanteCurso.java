@@ -9,6 +9,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"estudante_id", "curso_id"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
