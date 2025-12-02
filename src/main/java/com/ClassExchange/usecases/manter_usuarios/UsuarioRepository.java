@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
     List<Usuario> findByCampusId(UUID campusId);
     long countByCampusId(UUID campusId);
+    java.util.Optional<Usuario> findByEmail(String email);
 }
