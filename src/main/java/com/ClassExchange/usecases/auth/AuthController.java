@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +29,13 @@ public class AuthController {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ClientRegistrationRepository clientRegistrationRepository;
 
-    public AuthController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtService jwtService, ClientRegistrationRepository clientRegistrationRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
     @PostMapping("/login")
@@ -57,9 +60,11 @@ public class AuthController {
 
     @GetMapping("/oauth2/google")
     public ResponseEntity<Void> oauth2Google() {
+        if (clientRegistrationRepository == null || clientRegistrationRepository.findByRegistrationId("google") == null) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        }
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", "/oauth2/authorization/google")
                 .build();
     }
 }
-

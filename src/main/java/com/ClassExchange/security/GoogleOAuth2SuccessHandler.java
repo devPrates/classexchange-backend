@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,10 +21,12 @@ public class GoogleOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
+    private final String frontendUrl;
 
-    public GoogleOAuth2SuccessHandler(UsuarioRepository usuarioRepository, JwtService jwtService) {
+    public GoogleOAuth2SuccessHandler(UsuarioRepository usuarioRepository, JwtService jwtService, @Value("${app.frontend.url:http://localhost:3000}") String frontendUrl) {
         this.usuarioRepository = usuarioRepository;
         this.jwtService = jwtService;
+        this.frontendUrl = frontendUrl;
     }
 
     @Override
@@ -36,13 +39,13 @@ public class GoogleOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         }
 
         if (email == null) {
-            writeJson(response, 403, Map.of("error", "Conta não encontrada"));
+            response.sendRedirect(frontendUrl + "/login?error=" + java.net.URLEncoder.encode("Conta não encontrada", java.nio.charset.StandardCharsets.UTF_8));
             return;
         }
 
         var usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isEmpty()) {
-            writeJson(response, 403, Map.of("error", "Conta não encontrada. Procure um administrador."));
+            response.sendRedirect(frontendUrl + "/login?error=" + java.net.URLEncoder.encode("Conta não encontrada. Procure um administrador.", java.nio.charset.StandardCharsets.UTF_8));
             return;
         }
 
@@ -54,26 +57,8 @@ public class GoogleOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         claims.put("campus_id", usuario.getCampus() != null ? usuario.getCampus().getId().toString() : null);
         claims.put("roles", List.of(usuario.getRole().name()));
         String token = jwtService.generateToken(usuario.getId().toString(), claims, 3600);
-        writeJson(response, 200, Map.of("token", token));
+        response.sendRedirect(frontendUrl + "/login/callback?token=" + java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8));
     }
-
-    private void writeJson(HttpServletResponse response, int status, Map<String, Object> body) throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json");
-        StringBuilder sb = new StringBuilder("{");
-        int i = 0;
-        for (var e : body.entrySet()) {
-            if (i++ > 0) sb.append(',');
-            sb.append('"').append(e.getKey()).append('"').append(':');
-            Object v = e.getValue();
-            if (v == null) {
-                sb.append("null");
-            } else {
-                sb.append('"').append(v.toString().replace("\"", "\\\"")).append('"');
-            }
-        }
-        sb.append('}');
-        response.getOutputStream().write(sb.toString().getBytes(StandardCharsets.UTF_8));
-    }
+    
 }
 
