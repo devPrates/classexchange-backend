@@ -51,14 +51,30 @@ public class EstudanteCursoService {
     }
 
     public java.util.List<EstudanteCursoResponse> listarTodos() {
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream().map(mapper::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
         return repository.findAll().stream()
+                .filter(ec -> ec.getCurso() != null && ec.getCurso().getCampus() != null && campusId.equals(ec.getCurso().getCampus().getId().toString()))
                 .map(mapper::toResponse)
                 .toList();
     }
 
     public java.util.Optional<EstudanteCursoResponse> buscarPorId(java.util.UUID id) {
-        return repository.findById(id)
-                .map(mapper::toResponse);
+        java.util.Optional<EstudanteCurso> opt = repository.findById(id);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        EstudanteCurso ec = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || ec.getCurso() == null || ec.getCurso().getCampus() == null || !campusId.equals(ec.getCurso().getCampus().getId().toString())) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(mapper.toResponse(ec));
     }
 
     public EstudanteCursoResponse atualizar(java.util.UUID id, EstudanteCursoRequest request) {

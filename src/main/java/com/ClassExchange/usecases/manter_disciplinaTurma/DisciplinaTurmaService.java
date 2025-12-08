@@ -38,14 +38,30 @@ public class DisciplinaTurmaService {
     }
 
     public List<DisciplinaTurmaResponse> listarTodos() {
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream().map(this::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
         return repository.findAll().stream()
+                .filter(dt -> dt.getTurma() != null && dt.getTurma().getCurso() != null && dt.getTurma().getCurso().getCampus() != null && campusId.equals(dt.getTurma().getCurso().getCampus().getId().toString()))
                 .map(this::toResponse)
                 .toList();
     }
 
     public Optional<DisciplinaTurmaResponse> buscarPorId(UUID id) {
-        return repository.findById(id)
-                .map(this::toResponse);
+        java.util.Optional<DisciplinaTurma> opt = repository.findById(id);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        DisciplinaTurma dt = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || dt.getTurma() == null || dt.getTurma().getCurso() == null || dt.getTurma().getCurso().getCampus() == null || !campusId.equals(dt.getTurma().getCurso().getCampus().getId().toString())) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(dt));
     }
 
     public DisciplinaTurmaResponse atualizar(UUID id, DisciplinaTurmaRequest request) {

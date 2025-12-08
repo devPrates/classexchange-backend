@@ -32,19 +32,40 @@ public class CampusService {
     }
 
     public List<CampusResponse> listarTodos() {
-        return repository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream()
+                    .map(this::toResponse)
+                    .toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
+        java.util.UUID id = java.util.UUID.fromString(campusId);
+        return repository.findById(id).map(this::toResponse).map(java.util.List::of).orElse(java.util.List.of());
     }
 
     public Optional<CampusResponse> buscarPorId(@NonNull UUID id) {
-        return repository.findById(id)
-                .map(this::toResponse);
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || !id.toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return repository.findById(id).map(this::toResponse);
     }
 
     public Optional<CampusResponse> buscarPorSlug(@NonNull String slug) {
-        return repository.findBySlug(slug)
-                .map(this::toResponse);
+        java.util.Optional<Campus> campusOpt = repository.findBySlug(slug);
+        if (campusOpt.isEmpty()) return java.util.Optional.empty();
+        Campus campus = campusOpt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || !campus.getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(campus));
     }
 
     public CampusResponse atualizar(@NonNull UUID id, @NonNull CampusRequest request) {
@@ -66,10 +87,13 @@ public class CampusService {
         if (!repository.existsById(campusId)) {
             throw new NotFoundException("Campus não encontrado");
         }
-        return usuarioRepository.findByCampusId(campusId)
-                .stream()
-                .map(mapper::toUsuarioSimplificado)
-                .toList();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String cid = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (cid == null || !campusId.toString().equals(cid)) {
+                return java.util.List.of();
+            }
+        }
+        return usuarioRepository.findByCampusId(campusId).stream().map(mapper::toUsuarioSimplificado).toList();
     }
 
     private CampusResponse toResponse(Campus campus) {

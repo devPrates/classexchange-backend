@@ -39,16 +39,28 @@ public class PeriodoService {
 
     @Transactional(readOnly = true)
     public List<PeriodoResponse> listarTodos() {
-        return periodoRepository.findAll()
-                .stream()
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return periodoRepository.findAll().stream().map(this::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
+        return periodoRepository.findAll().stream()
+                .filter(p -> p.getTurma() != null && p.getTurma().getCurso() != null && p.getTurma().getCurso().getCampus() != null && campusId.equals(p.getTurma().getCurso().getCampus().getId().toString()))
                 .map(this::toResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public PeriodoResponse buscarPorId(UUID id) {
-        Periodo periodo = periodoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Período não encontrado com ID: " + id));
+        Periodo periodo = periodoRepository.findById(id).orElseThrow(() -> new NotFoundException("Período não encontrado com ID: " + id));
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || periodo.getTurma() == null || periodo.getTurma().getCurso() == null || periodo.getTurma().getCurso().getCampus() == null || !campusId.equals(periodo.getTurma().getCurso().getCampus().getId().toString())) {
+                throw new NotFoundException("Período não encontrado com ID: " + id);
+            }
+        }
         return toResponse(periodo);
     }
 
@@ -78,8 +90,16 @@ public class PeriodoService {
     }
 
     public Optional<PeriodoResponse> buscarPorSlug(String slug) {
-        return periodoRepository.findBySlug(slug)
-                .map(this::toResponse);
+        Optional<Periodo> opt = periodoRepository.findBySlug(slug);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Periodo periodo = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || periodo.getTurma() == null || periodo.getTurma().getCurso() == null || periodo.getTurma().getCurso().getCampus() == null || !campusId.equals(periodo.getTurma().getCurso().getCampus().getId().toString())) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(periodo));
     }
 
     private void validarDatas(LocalDate inicio, LocalDate fim) {

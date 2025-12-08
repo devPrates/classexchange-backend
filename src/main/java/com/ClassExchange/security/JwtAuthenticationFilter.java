@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Claims claims = jws.getBody();
                 String subject = claims.getSubject();
                 Object rolesObj = claims.get("roles");
+                Object campusObj = claims.get("campus_id");
                 List<String> roles = null;
                 if (rolesObj instanceof List<?> rawList) {
                     roles = rawList.stream()
@@ -43,7 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                    .toList();
                 }
                 List<SimpleGrantedAuthority> authorities = roles != null ? roles.stream().map(SimpleGrantedAuthority::new).toList() : List.of();
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subject, null, authorities);
+                String campusId = campusObj != null ? campusObj.toString() : null;
+                AuthenticatedUser principal = new AuthenticatedUser(subject, campusId, roles != null ? roles : java.util.Collections.emptyList());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
@@ -52,4 +55,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-

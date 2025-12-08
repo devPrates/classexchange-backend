@@ -41,6 +41,7 @@ public class TestDataInitializer implements ApplicationRunner {
 
         createIfMissing("devprates@gmail.com", "teste123", "Dev Prates", RoleUsuario.ADMINISTRADOR, campus);
         createIfMissing("gabriel.bitencourt@estudante.ifms.edu.br", "teste123", "Gabriel Bitencourt", RoleUsuario.PROFESSOR, campus);
+        createIfMissing("ga1134230@gmail.com", "teste123", "Usuário Coordenação", RoleUsuario.COORDENACAO, campus);
     }
 
     private void createIfMissing(String email, String senha, String nome, RoleUsuario role, Campus campus) {
@@ -56,4 +57,3 @@ public class TestDataInitializer implements ApplicationRunner {
         }
     }
 }
-

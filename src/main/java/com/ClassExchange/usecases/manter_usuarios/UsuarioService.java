@@ -31,14 +31,28 @@ public class UsuarioService {
     }
 
     public List<UsuarioResponse> listarTodos() {
-        return repository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream().map(this::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
+        java.util.UUID id = java.util.UUID.fromString(campusId);
+        return repository.findByCampusId(id).stream().map(this::toResponse).toList();
     }
 
     public Optional<UsuarioResponse> buscarPorId(UUID id) {
-        return repository.findById(id)
-                .map(this::toResponse);
+        Optional<Usuario> opt = repository.findById(id);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Usuario usuario = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || usuario.getCampus() == null || !usuario.getCampus().getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(usuario));
     }
 
     public UsuarioResponse atualizar(UUID id, UsuarioRequest request) {

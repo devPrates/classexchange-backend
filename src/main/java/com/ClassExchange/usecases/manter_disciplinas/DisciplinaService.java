@@ -5,6 +5,7 @@ import com.ClassExchange.domain.entity.Disciplina;
 import com.ClassExchange.domain.entity.Periodo;
 import com.ClassExchange.exception.NotFoundException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
+import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import com.ClassExchange.usecases.manter_periodos.PeriodoRepository;
 import com.ClassExchange.utils.SlugUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class DisciplinaService {
 
     private final DisciplinaRepository repository;
     private final CursoRepository cursoRepository;
+    private final CampusRepository campusRepository;
     private final PeriodoRepository periodoRepository;
     private final DisciplinaMapper mapper;
 
@@ -35,14 +37,34 @@ public class DisciplinaService {
     }
 
     public List<DisciplinaResponse> listarTodos() {
-        return repository.findAll().stream()
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream().map(this::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
+        java.util.UUID id = java.util.UUID.fromString(campusId);
+        com.ClassExchange.domain.entity.Campus campus = campusRepository.findById(id).orElse(null);
+        java.util.List<com.ClassExchange.domain.entity.Curso> cursos = cursoRepository.findByCampus(campus);
+        return cursos.stream()
+                .flatMap(c -> repository.findByCurso(c).stream())
                 .map(this::toResponse)
                 .toList();
     }
 
     public Optional<DisciplinaResponse> buscarPorId(UUID id) {
-        return repository.findById(id)
-                .map(this::toResponse);
+        Optional<Disciplina> opt = repository.findById(id);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Disciplina disciplina = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            com.ClassExchange.domain.entity.Curso curso = disciplina.getCurso();
+            if (campusId == null || curso == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(disciplina));
     }
 
     public DisciplinaResponse atualizar(UUID id, DisciplinaRequest request) {
@@ -67,8 +89,17 @@ public class DisciplinaService {
     }
 
     public Optional<DisciplinaResponse> buscarPorSlug(String slug) {
-        return repository.findBySlug(slug)
-                .map(this::toResponse);
+        Optional<Disciplina> opt = repository.findBySlug(slug);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Disciplina disciplina = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            com.ClassExchange.domain.entity.Curso curso = disciplina.getCurso();
+            if (campusId == null || curso == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(disciplina));
     }
 
     private DisciplinaResponse toResponse(Disciplina disciplina) {

@@ -43,19 +43,43 @@ public class CursoService {
     }
 
     public List<CursoResponse> listarTodos() {
-        return repository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+        if (com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            return repository.findAll().stream().map(this::toResponse).toList();
+        }
+        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+        if (campusId == null) {
+            return java.util.List.of();
+        }
+        java.util.UUID id = java.util.UUID.fromString(campusId);
+        Campus campus = campusRepository.findById(id).orElse(null);
+        if (campus == null) return java.util.List.of();
+        return repository.findByCampus(campus).stream().map(this::toResponse).toList();
     }
 
     public Optional<CursoResponse> buscarPorId(UUID id) {
-        return repository.findById(id)
-                .map(this::toResponse);
+        Optional<Curso> opt = repository.findById(id);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Curso curso = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(curso));
     }
 
     public Optional<CursoResponse> buscarPorSlug(String slug) {
-        return repository.findBySlug(slug)
-                .map(this::toResponse);
+        Optional<Curso> opt = repository.findBySlug(slug);
+        if (opt.isEmpty()) return java.util.Optional.empty();
+        Curso curso = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.Optional.empty();
+            }
+        }
+        return java.util.Optional.of(this.toResponse(curso));
     }
 
     public CursoResponse atualizar(UUID id, CursoRequest request) {
@@ -104,8 +128,13 @@ public class CursoService {
     }
 
     public java.util.List<com.ClassExchange.usecases.manter_cursos.CursoResponse.ProfessorCursoSimplificado> listarProfessoresDoCurso(java.util.UUID id) {
-        Curso curso = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
+        Curso curso = repository.findById(id).orElseThrow(() -> new NotFoundException("Curso não encontrado"));
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.List.of();
+            }
+        }
         return professorCursoRepository.findByCurso(curso).stream()
                 .map(mapper::toProfessorCursoSimplificado)
                 .toList();
