@@ -28,5 +28,6 @@ public class ProfessorDisciplina extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "disciplina_turma_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private DisciplinaTurma disciplinaTurma;
 }

@@ -36,5 +36,6 @@ public class EstudanteCurso extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Curso curso;
 }

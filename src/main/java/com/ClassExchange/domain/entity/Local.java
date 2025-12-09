@@ -2,6 +2,8 @@ package com.ClassExchange.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -16,6 +18,7 @@ public class Local extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Campus campus;
 
     @Column

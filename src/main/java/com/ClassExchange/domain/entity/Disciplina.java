@@ -2,6 +2,8 @@ package com.ClassExchange.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -22,6 +24,7 @@ public class Disciplina extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "periodo_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Periodo periodo;
 
     @Column(nullable = true)
@@ -32,6 +35,7 @@ public class Disciplina extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Curso curso;
 
 

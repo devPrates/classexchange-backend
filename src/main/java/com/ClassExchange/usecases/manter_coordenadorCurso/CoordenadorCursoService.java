@@ -3,6 +3,8 @@ package com.ClassExchange.usecases.manter_coordenadorCurso;
 import com.ClassExchange.domain.entity.CoordenadorCurso;
 import com.ClassExchange.domain.entity.Curso;
 import com.ClassExchange.domain.entity.Usuario;
+import com.ClassExchange.domain.enums.RoleUsuario;
+import com.ClassExchange.exception.BusinessException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
 import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,10 @@ public class CoordenadorCursoService {
     private CoordenadorCursoMapper mapper;
 
     public CoordenadorCursoResponse criar(CoordenadorCursoRequest request) {
+        java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findByCursoIdAndFimIsNull(request.cursoId());
+        if (existente.isPresent()) {
+            throw new BusinessException("Curso já possui coordenador ativo");
+        }
         Usuario usuario = usuarioRepository.findById(request.usuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + request.usuarioId()));
 
@@ -42,6 +48,8 @@ public class CoordenadorCursoService {
                 .curso(curso)
                 .build();
 
+        usuario.setRole(RoleUsuario.COORDENADORCURSO);
+        usuarioRepository.save(usuario);
         CoordenadorCurso coordenadorCursoSalvo = coordenadorCursoRepository.save(coordenadorCurso);
         return toResponse(coordenadorCursoSalvo);
     }
@@ -69,6 +77,23 @@ public class CoordenadorCursoService {
 
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + request.cursoId()));
+
+        if (!curso.getId().equals(coordenadorCurso.getCurso().getId())) {
+            java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findByCursoIdAndFimIsNull(curso.getId());
+            if (existente.isPresent() && !existente.get().getId().equals(coordenadorCurso.getId())) {
+                throw new BusinessException("Curso já possui coordenador ativo");
+            }
+        }
+
+        Usuario antigo = coordenadorCurso.getUsuario();
+        if (antigo != null && !antigo.getId().equals(usuario.getId())) {
+            if (antigo.getRole() == RoleUsuario.COORDENADORCURSO) {
+                antigo.setRole(RoleUsuario.PROFESSOR);
+                usuarioRepository.save(antigo);
+            }
+        }
+        usuario.setRole(RoleUsuario.COORDENADORCURSO);
+        usuarioRepository.save(usuario);
 
         coordenadorCurso.setInicio(request.inicio());
         coordenadorCurso.setFim(request.fim());

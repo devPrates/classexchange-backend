@@ -28,6 +28,7 @@ public class DiretorEnsino extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Campus campus;
 
 }

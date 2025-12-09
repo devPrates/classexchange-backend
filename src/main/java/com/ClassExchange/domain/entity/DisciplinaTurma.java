@@ -2,6 +2,8 @@ package com.ClassExchange.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -16,10 +18,12 @@ public class DisciplinaTurma extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "disciplina_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Disciplina disciplina;
 
     @ManyToOne
     @JoinColumn(name = "turma_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Turma turma;
 
     @ManyToOne

@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+import java.util.Optional;
 
 @Repository
 public interface CoordenadorCursoRepository extends JpaRepository<CoordenadorCurso, UUID> {
     java.util.List<CoordenadorCurso> findByCurso(Curso curso);
+    Optional<CoordenadorCurso> findByCursoIdAndFimIsNull(UUID cursoId);
 }

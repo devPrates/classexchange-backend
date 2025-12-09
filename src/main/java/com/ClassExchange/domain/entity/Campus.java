@@ -36,10 +36,10 @@ public class Campus extends BaseEntity {
 
     private String endereco;
 
-    @OneToMany(mappedBy = "campus")
+    @OneToMany(mappedBy = "campus", cascade = jakarta.persistence.CascadeType.REMOVE, orphanRemoval = true)
     private List<Curso> cursos;
 
-    @OneToMany(mappedBy = "campus")
+    @OneToMany(mappedBy = "campus", cascade = jakarta.persistence.CascadeType.REMOVE, orphanRemoval = true)
     private List<DiretorEnsino> diretorEnsino;
 
 }

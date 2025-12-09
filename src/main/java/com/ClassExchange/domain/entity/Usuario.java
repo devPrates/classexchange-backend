@@ -3,6 +3,8 @@ package com.ClassExchange.domain.entity;
 import com.ClassExchange.domain.enums.RoleUsuario;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class Usuario extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "campus_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Campus campus;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE, orphanRemoval = true)

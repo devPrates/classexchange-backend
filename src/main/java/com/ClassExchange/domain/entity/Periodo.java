@@ -3,6 +3,8 @@ package com.ClassExchange.domain.entity;
 import com.ClassExchange.domain.enums.TipoPeriodo;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -41,10 +43,12 @@ public class Periodo extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "turma_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Turma turma;
 
     @ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Curso curso;
 
 }

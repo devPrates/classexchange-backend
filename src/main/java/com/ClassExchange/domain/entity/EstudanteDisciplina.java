@@ -24,5 +24,6 @@ public class EstudanteDisciplina extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "aula_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Aula aula;
 }
