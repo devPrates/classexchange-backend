@@ -32,7 +32,7 @@ public class CoordenadorCursoService {
     private CoordenadorCursoMapper mapper;
 
     public CoordenadorCursoResponse criar(CoordenadorCursoRequest request) {
-        java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findByCursoIdAndFimIsNull(request.cursoId());
+        java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findAtivoByCursoId(request.cursoId());
         if (existente.isPresent()) {
             throw new BusinessException("Curso já possui coordenador ativo");
         }
@@ -80,7 +80,7 @@ public class CoordenadorCursoService {
                 return Optional.empty();
             }
         }
-        return coordenadorCursoRepository.findByCursoIdAndFimIsNull(cursoId)
+        return coordenadorCursoRepository.findAtivoByCursoId(cursoId)
                 .map(this::toResponse);
     }
 
@@ -95,7 +95,7 @@ public class CoordenadorCursoService {
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado com ID: " + request.cursoId()));
 
         if (!curso.getId().equals(coordenadorCurso.getCurso().getId())) {
-            java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findByCursoIdAndFimIsNull(curso.getId());
+            java.util.Optional<CoordenadorCurso> existente = coordenadorCursoRepository.findAtivoByCursoId(curso.getId());
             if (existente.isPresent() && !existente.get().getId().equals(coordenadorCurso.getId())) {
                 throw new BusinessException("Curso já possui coordenador ativo");
             }

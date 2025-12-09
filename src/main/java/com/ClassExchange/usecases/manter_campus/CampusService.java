@@ -102,7 +102,7 @@ public class CampusService {
                 .map(curso -> {
                     Optional<CoordenadorCurso> coord = coordenadorCursoRepository.findByCurso(curso)
                             .stream()
-                            .filter(cc -> cc.getFim() == null)
+                            .filter(cc -> cc.getFim() == null || cc.getFim().isAfter(java.time.LocalDate.now()))
                             .max(Comparator.comparing(CoordenadorCurso::getInicio));
                     CampusResponse.CoordenadorCursoSimplificado coordDto = coord
                             .map(mapper::toCoordenadorSimplificado)
@@ -117,7 +117,7 @@ public class CampusService {
         Optional<DiretorEnsino> diretorAtual = Optional.ofNullable(campus.getDiretorEnsino())
                 .orElse(List.of())
                 .stream()
-                .filter(de -> de.getFim() == null)
+                .filter(de -> de.getFim() == null || de.getFim().isAfter(java.time.LocalDate.now()))
                 .max(Comparator.comparing(DiretorEnsino::getInicio));
 
         CampusResponse.DiretorEnsinoSimplificado diretorDto = diretorAtual

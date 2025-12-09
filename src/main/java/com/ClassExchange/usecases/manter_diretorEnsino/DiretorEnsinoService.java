@@ -32,7 +32,7 @@ public class DiretorEnsinoService {
     private DiretorEnsinoMapper mapper;
 
     public DiretorEnsinoResponse criar(DiretorEnsinoRequest request) {
-        Optional<DiretorEnsino> existente = diretorEnsinoRepository.findByCampusIdAndFimIsNull(request.campusId());
+        Optional<DiretorEnsino> existente = diretorEnsinoRepository.findAtivoByCampusId(request.campusId());
         if (existente.isPresent()) {
             throw new BusinessException("Campus já possui diretor de ensino ativo");
         }
@@ -77,7 +77,7 @@ public class DiretorEnsinoService {
                 return Optional.empty();
             }
         }
-        return diretorEnsinoRepository.findByCampusIdAndFimIsNull(campusId)
+        return diretorEnsinoRepository.findAtivoByCampusId(campusId)
                 .map(this::toResponse);
     }
 
@@ -91,7 +91,7 @@ public class DiretorEnsinoService {
                 .orElseThrow(() -> new RuntimeException("Campus não encontrado com ID: " + request.campusId()));
 
         if (!campus.getId().equals(diretorEnsino.getCampus().getId())) {
-            Optional<DiretorEnsino> existente = diretorEnsinoRepository.findByCampusIdAndFimIsNull(campus.getId());
+            Optional<DiretorEnsino> existente = diretorEnsinoRepository.findAtivoByCampusId(campus.getId());
             if (existente.isPresent() && !existente.get().getId().equals(diretorEnsino.getId())) {
                 throw new BusinessException("Campus já possui diretor de ensino ativo");
             }
