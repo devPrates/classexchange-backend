@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class TurmaService {
 
     private final TurmaRepository repository;
@@ -27,6 +28,7 @@ public class TurmaService {
     private final PeriodoRepository periodoRepository;
     private final PeriodoMapper periodoMapper;
 
+    @org.springframework.transaction.annotation.Transactional
     public TurmaResponse criar(TurmaRequest request) {
         Curso curso = cursoRepository.findById(request.cursoId())
                 .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
@@ -43,28 +45,26 @@ public class TurmaService {
         }
         String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
         if (campusId == null) {
-            return java.util.List.of();
+            return List.of();
         }
-        java.util.UUID id = java.util.UUID.fromString(campusId);
+        UUID id = UUID.fromString(campusId);
         com.ClassExchange.domain.entity.Campus campus = campusRepository.findById(id).orElse(null);
-        java.util.List<com.ClassExchange.domain.entity.Curso> cursos = cursoRepository.findByCampus(campus);
+        List<com.ClassExchange.domain.entity.Curso> cursos = cursoRepository.findByCampus(campus);
         return cursos.stream().flatMap(c -> repository.findByCurso(c).stream()).map(this::toResponse).toList();
     }
 
     public Optional<TurmaResponse> buscarPorId(UUID id) {
-        Optional<Turma> opt = repository.findById(id);
-        if (opt.isEmpty()) return java.util.Optional.empty();
-        Turma turma = opt.get();
-        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
-            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
-            com.ClassExchange.domain.entity.Curso curso = turma.getCurso();
-            if (campusId == null || curso == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
-                return java.util.Optional.empty();
-            }
-        }
-        return java.util.Optional.of(this.toResponse(turma));
+        return repository.findById(id)
+                .filter(turma -> {
+                    if (com.ClassExchange.security.SecurityUtils.isAdmin()) return true;
+                    String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+                    Curso curso = turma.getCurso();
+                    return campusId != null && curso != null && curso.getCampus() != null && curso.getCampus().getId().toString().equals(campusId);
+                })
+                .map(this::toResponse);
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public TurmaResponse atualizar(UUID id, TurmaRequest request) {
         Turma turma = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Turma não encontrada"));
@@ -78,6 +78,7 @@ public class TurmaService {
         return toResponse(repository.save(turma));
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public void deletar(UUID id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("Turma não encontrada");
@@ -86,62 +87,55 @@ public class TurmaService {
     }
 
     public Optional<TurmaResponse> buscarPorSlug(String slug) {
-        Optional<Turma> opt = repository.findBySlug(slug);
-        if (opt.isEmpty()) return java.util.Optional.empty();
-        Turma turma = opt.get();
-        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
-            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
-            com.ClassExchange.domain.entity.Curso curso = turma.getCurso();
-            if (campusId == null || curso == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
-                return java.util.Optional.empty();
-            }
-        }
-        return java.util.Optional.of(this.toResponse(turma));
+        return repository.findBySlug(slug)
+                .filter(turma -> {
+                    if (com.ClassExchange.security.SecurityUtils.isAdmin()) return true;
+                    String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+                    Curso curso = turma.getCurso();
+                    return campusId != null && curso != null && curso.getCampus() != null && curso.getCampus().getId().toString().equals(campusId);
+                })
+                .map(this::toResponse);
     }
 
     private TurmaResponse toResponse(Turma turma) {
         return mapper.toResponse(turma);
     }
 
-    public java.util.Optional<TurmaComPeriodosResponse> buscarPorSlugComPeriodos(String slug) {
+    public Optional<TurmaComPeriodosResponse> buscarPorSlugComPeriodos(String slug) {
         return repository.findBySlug(slug)
+                .filter(turma -> {
+                    if (com.ClassExchange.security.SecurityUtils.isAdmin()) return true;
+                    String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+                    Curso curso = turma.getCurso();
+                    return campusId != null && curso != null && curso.getCampus() != null && curso.getCampus().getId().toString().equals(campusId);
+                })
                 .map(t -> {
-                    if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
-                        String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
-                        com.ClassExchange.domain.entity.Curso curso = t.getCurso();
-                        if (campusId == null || curso == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
-                            return null;
-                        }
-                    }
-                    java.util.List<PeriodoResponse> periodos = periodoRepository.findByTurmaId(t.getId()).stream()
+                    List<PeriodoResponse> periodos = periodoRepository.findByTurmaId(t.getId()).stream()
                             .map(periodoMapper::toResponse)
                             .toList();
                     return mapper.toResponseComPeriodos(t, periodos);
                 });
     }
 
-    public java.util.List<TurmaResponse> listarPorCursoId(java.util.UUID cursoId) {
-        java.util.Optional<com.ClassExchange.domain.entity.Curso> opt = cursoRepository.findById(cursoId);
-        if (opt.isEmpty()) return java.util.List.of();
-        com.ClassExchange.domain.entity.Curso curso = opt.get();
-        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
-            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
-            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
-                return java.util.List.of();
-            }
-        }
-        return repository.findByCurso(curso).stream().map(this::toResponse).toList();
+    public List<TurmaResponse> listarPorCursoId(UUID cursoId) {
+        return cursoRepository.findById(cursoId)
+                .filter(curso -> {
+                    if (com.ClassExchange.security.SecurityUtils.isAdmin()) return true;
+                    String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+                    return campusId != null && curso.getCampus() != null && curso.getCampus().getId().toString().equals(campusId);
+                })
+                .map(curso -> repository.findByCurso(curso).stream().map(this::toResponse).toList())
+                .orElse(List.of());
     }
 
-    public java.util.List<TurmaResponse> listarPorCursoSlug(String slug) {
-        com.ClassExchange.domain.entity.Curso curso = cursoRepository.findBySlug(slug).orElse(null);
-        if (curso == null) return java.util.List.of();
-        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
-            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
-            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
-                return java.util.List.of();
-            }
-        }
-        return repository.findByCurso(curso).stream().map(this::toResponse).toList();
+    public List<TurmaResponse> listarPorCursoSlug(String slug) {
+        return cursoRepository.findBySlug(slug)
+                .filter(curso -> {
+                    if (com.ClassExchange.security.SecurityUtils.isAdmin()) return true;
+                    String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+                    return campusId != null && curso.getCampus() != null && curso.getCampus().getId().toString().equals(campusId);
+                })
+                .map(curso -> repository.findByCurso(curso).stream().map(this::toResponse).toList())
+                .orElse(List.of());
     }
 }
