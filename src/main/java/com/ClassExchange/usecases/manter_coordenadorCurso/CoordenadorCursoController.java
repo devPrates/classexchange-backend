@@ -53,6 +53,18 @@ public class CoordenadorCursoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/curso/{cursoId}")
+    @Operation(summary = "Coordenador de curso ativo por curso", description = "Retorna o coordenador de curso ativo para o curso informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Coordenador retornado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Coordenador não encontrado para o curso")
+    })
+    public ResponseEntity<CoordenadorCursoResponse> buscarAtivoPorCurso(@PathVariable UUID cursoId) {
+        Optional<CoordenadorCursoResponse> coord = coordenadorCursoService.buscarAtivoPorCurso(cursoId);
+        return coord.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar coordenação de curso", description = "Atualiza os dados de uma coordenação existente")
     @ApiResponses(value = {

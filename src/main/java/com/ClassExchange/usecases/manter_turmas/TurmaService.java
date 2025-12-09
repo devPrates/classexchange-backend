@@ -119,4 +119,29 @@ public class TurmaService {
                     return mapper.toResponseComPeriodos(t, periodos);
                 });
     }
+
+    public java.util.List<TurmaResponse> listarPorCursoId(java.util.UUID cursoId) {
+        java.util.Optional<com.ClassExchange.domain.entity.Curso> opt = cursoRepository.findById(cursoId);
+        if (opt.isEmpty()) return java.util.List.of();
+        com.ClassExchange.domain.entity.Curso curso = opt.get();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.List.of();
+            }
+        }
+        return repository.findByCurso(curso).stream().map(this::toResponse).toList();
+    }
+
+    public java.util.List<TurmaResponse> listarPorCursoSlug(String slug) {
+        com.ClassExchange.domain.entity.Curso curso = cursoRepository.findBySlug(slug).orElse(null);
+        if (curso == null) return java.util.List.of();
+        if (!com.ClassExchange.security.SecurityUtils.isAdmin()) {
+            String campusId = com.ClassExchange.security.SecurityUtils.currentCampusId();
+            if (campusId == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(campusId)) {
+                return java.util.List.of();
+            }
+        }
+        return repository.findByCurso(curso).stream().map(this::toResponse).toList();
+    }
 }

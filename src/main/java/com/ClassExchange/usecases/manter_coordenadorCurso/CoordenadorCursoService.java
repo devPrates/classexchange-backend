@@ -8,6 +8,7 @@ import com.ClassExchange.exception.BusinessException;
 import com.ClassExchange.usecases.manter_cursos.CursoRepository;
 import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.ClassExchange.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +66,21 @@ public class CoordenadorCursoService {
     @Transactional(readOnly = true)
     public Optional<CoordenadorCursoResponse> buscarPorId(UUID id) {
         return coordenadorCursoRepository.findById(id)
+                .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CoordenadorCursoResponse> buscarAtivoPorCurso(UUID cursoId) {
+        if (!SecurityUtils.isAdmin()) {
+            var cursoOpt = cursoRepository.findById(cursoId);
+            if (cursoOpt.isEmpty()) return Optional.empty();
+            var curso = cursoOpt.get();
+            String currentCampus = SecurityUtils.currentCampusId();
+            if (currentCampus == null || curso.getCampus() == null || !curso.getCampus().getId().toString().equals(currentCampus)) {
+                return Optional.empty();
+            }
+        }
+        return coordenadorCursoRepository.findByCursoIdAndFimIsNull(cursoId)
                 .map(this::toResponse);
     }
 

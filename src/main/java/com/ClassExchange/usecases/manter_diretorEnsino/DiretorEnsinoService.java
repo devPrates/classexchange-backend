@@ -7,6 +7,7 @@ import com.ClassExchange.domain.enums.RoleUsuario;
 import com.ClassExchange.exception.BusinessException;
 import com.ClassExchange.usecases.manter_campus.CampusRepository;
 import com.ClassExchange.usecases.manter_usuarios.UsuarioRepository;
+import com.ClassExchange.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +66,18 @@ public class DiretorEnsinoService {
     @Transactional(readOnly = true)
     public Optional<DiretorEnsinoResponse> buscarPorId(UUID id) {
         return diretorEnsinoRepository.findById(id)
+                .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<DiretorEnsinoResponse> buscarAtivoPorCampus(UUID campusId) {
+        if (!SecurityUtils.isAdmin()) {
+            String currentCampus = SecurityUtils.currentCampusId();
+            if (currentCampus == null || !campusId.toString().equals(currentCampus)) {
+                return Optional.empty();
+            }
+        }
+        return diretorEnsinoRepository.findByCampusIdAndFimIsNull(campusId)
                 .map(this::toResponse);
     }
 

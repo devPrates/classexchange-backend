@@ -94,7 +94,21 @@ public class TurmaController {
         service.deletar(id);
     }
 
-    
+    @GetMapping("/curso/{cursoId}")
+    @Operation(summary = "Listar turmas por ID de curso", description = "Retorna todas as turmas pertencentes ao curso informado")
+    @ApiResponse(responseCode = "200", description = "Lista de turmas retornada com sucesso")
+    public java.util.List<TurmaResponse> listarPorCursoId(
+            @Parameter(description = "ID do curso", required = true)
+            @PathVariable java.util.UUID cursoId) {
+        return service.listarPorCursoId(cursoId);
+    }
 
-    
+    @GetMapping("/curso/slug/{slug}")
+    @Operation(summary = "Listar turmas por slug de curso", description = "Retorna todas as turmas pertencentes ao curso informado pelo slug")
+    @ApiResponse(responseCode = "200", description = "Lista de turmas retornada com sucesso")
+    public java.util.List<TurmaResponse> listarPorCursoSlug(
+            @Parameter(description = "Slug do curso", required = true)
+            @PathVariable String slug) {
+        return service.listarPorCursoSlug(slug);
+    }
 }

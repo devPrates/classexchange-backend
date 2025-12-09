@@ -53,6 +53,18 @@ public class DiretorEnsinoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/campus/{campusId}")
+    @Operation(summary = "Diretor de ensino ativo por campus", description = "Retorna o diretor de ensino ativo para o campus informado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Diretor de ensino retornado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Diretor de ensino não encontrado para o campus")
+    })
+    public ResponseEntity<DiretorEnsinoResponse> buscarAtivoPorCampus(@PathVariable UUID campusId) {
+        Optional<DiretorEnsinoResponse> direcao = diretorEnsinoService.buscarAtivoPorCampus(campusId);
+        return direcao.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar direção de ensino", description = "Atualiza os dados de uma direção existente")
     @ApiResponses(value = {
