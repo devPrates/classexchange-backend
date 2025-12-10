@@ -21,37 +21,22 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        List<String> origins = new ArrayList<>();
-        if (frontendUrl != null && !frontendUrl.isBlank()) origins.add(frontendUrl);
-        origins.add("http://localhost:3000");
-        origins.add("http://127.0.0.1:3000");
-        origins.add("http://localhost:8080");
-        origins.add("https://localhost:3000");
-        origins.add("https://localhost:8080");
-
         registry.addMapping("/api/**")
-                .allowedOrigins(origins.toArray(String[]::new))
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOriginPatterns("*")
+                .allowedMethods("*")
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(false)
                 .maxAge(3600);
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> patterns = Arrays.asList(
-                "http://localhost:*",
-                "https://localhost:*",
-                "http://127.0.0.1:*"
-        );
-        configuration.setAllowedOriginPatterns(patterns);
-        List<String> explicit = new ArrayList<>();
-        if (frontendUrl != null && !frontendUrl.isBlank()) explicit.add(frontendUrl);
-        configuration.setAllowedOrigins(explicit);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedOrigins(new ArrayList<>());
+        configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
