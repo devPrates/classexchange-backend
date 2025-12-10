@@ -67,4 +67,14 @@ public class AuthController {
                 .header("Location", "/oauth2/authorization/google")
                 .build();
     }
+
+    @GetMapping("/oauth2/github")
+    public ResponseEntity<Void> oauth2Github() {
+        if (clientRegistrationRepository == null || clientRegistrationRepository.findByRegistrationId("github") == null) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        }
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/oauth2/authorization/github")
+                .build();
+    }
 }
