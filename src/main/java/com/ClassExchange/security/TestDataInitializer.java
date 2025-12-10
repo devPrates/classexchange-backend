@@ -13,7 +13,7 @@ import org.springframework.boot.ApplicationRunner;
 import java.util.Optional;
 
 @Component
-@Profile("test")
+@Profile({"test","dev"})
 public class TestDataInitializer implements ApplicationRunner {
 
     private final UsuarioRepository usuarioRepository;
