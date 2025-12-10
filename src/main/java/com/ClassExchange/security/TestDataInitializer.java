@@ -13,7 +13,7 @@ import org.springframework.boot.ApplicationRunner;
 import java.util.Optional;
 
 @Component
-@Profile({"test","dev"})
+@Profile("test")
 public class TestDataInitializer implements ApplicationRunner {
 
     private final UsuarioRepository usuarioRepository;
@@ -39,10 +39,8 @@ public class TestDataInitializer implements ApplicationRunner {
         Optional<Campus> campusOpt = campusRepository.findAll().stream().findFirst();
         Campus campus = campusOpt.orElse(null);
 
-        if (campus != null) {
-            createIfMissing("devprates@gmail.com", "teste123", "Dev Prates", RoleUsuario.ADMINISTRADOR, campus);
-            createIfMissing("gabriel.bitencourt@estudante.ifms.edu.br", "teste123", "Gabriel Bitencourt", RoleUsuario.PROFESSOR, campus);
-        }
+        createIfMissing("devprates@gmail.com", "teste123", "Dev Prates", RoleUsuario.ADMINISTRADOR, campus);
+        createIfMissing("gabriel.bitencourt@estudante.ifms.edu.br", "teste123", "Gabriel Bitencourt", RoleUsuario.PROFESSOR, campus);
         createIfMissing("ga1134230@gmail.com", "teste123", "Usuário Coordenação", RoleUsuario.COORDENACAO, campus);
     }
 

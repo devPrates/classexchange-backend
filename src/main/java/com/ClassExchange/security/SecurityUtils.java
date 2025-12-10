@@ -18,11 +18,12 @@ public final class SecurityUtils {
 
     public static boolean isAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) return true;
+        if (auth == null) return false;
         Object principal = auth.getPrincipal();
         if (principal instanceof AuthenticatedUser au) {
             return au.getRoles() != null && au.getRoles().stream().anyMatch(r -> "ADMINISTRADOR".equals(r));
         }
-        return true;
+        return false;
     }
 }
+
